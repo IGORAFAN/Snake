@@ -1,0 +1,40 @@
+# CMake build results.
+cmake-build-debug/*
+cmake-build/*
+build/*
+.idea/*
+__pycache__
+.directory
+.terraform/
+*.tfstate.*.backup
+*.user*
+*.autosave
+*.orig
+
+# CMake user presets
+CMakeUserPresets.json
+
+# clang-tidy
+compile_commands.json
+
+# VsCode
+.vscode
+.devcontainer
+
+# MacOs
+.DS_Store
+Icon[
+]
+
+# Gcov files (code coverage)
+*.gcno
+*.gcda
+*.gcov
+
+# Visual Studio
+.vs/
+CMakeSettings.json
+out/
+
+# Python files
+get-pip.py
