@@ -1,12 +1,25 @@
 #pragma once
 
-class Game {
+#include "Field.h"
+#include "Snake.h"
+
+enum class GameState {
+	BREAKGAME,
+	STARTGAME,
+	GAMEINPROCESS,
+	FINALGAME
+};
+
+class Game final
+{
 public:
 	Game();
-	~Game();
-	void Start();
+	[[noreturn]] void Start();
 	void Stop();
 
 private:
-	bool isRunning_;
+	bool isGameRunning_;
+	GameState currentStateOfGame_;
+	Field field_;
+	Snake snake_;
 };

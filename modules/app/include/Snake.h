@@ -1,5 +1,9 @@
 #pragma once
 
-class Snake
+class Snake final
 {
+public:
+	Snake();
+	~Snake();
+	void MakeRandomSpawn();
 };
