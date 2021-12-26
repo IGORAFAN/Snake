@@ -3,14 +3,23 @@
 
 #include "../include/Game.h"
 
+namespace app
+{
+
 Game::Game()
 	: isGameRunning_(false),
 	  currentStateOfGame_(GameState::BREAKGAME),
 	  field_(),
+	  food_(),
 	  snake_()
 {}
 
-[[noreturn]] void Game::Start()
+void Game::GenerateNewGame()
+{
+	field_.
+}
+
+void Game::Start()
 {
 	isGameRunning_ = true;
 	std::cout << "Start game" << std::endl;
@@ -22,12 +31,12 @@ Game::Game()
 			case GameState::BREAKGAME:;
 				break;
 			case GameState::STARTGAME:
-					snake_.MakeRandomSpawn();
-					field_.PrintCurrentPosition();
-					currentStateOfGame_ = GameState::GAMEINPROCESS;
+				GenerateNewGame();
+				field_.PrintCurrentPositions();
+				currentStateOfGame_ = GameState::GAMEINPROCESS;
 				break;
 			case GameState::GAMEINPROCESS:
-				field_.PrintCurrentPosition();
+				field_.PrintCurrentPositions();
 				break;
 			case GameState::FINALGAME:;
 				break;
@@ -45,3 +54,5 @@ void Game::Stop()
 	isGameRunning_ = false;
 	std::cout << "Stop game" << std::endl;
 }
+
+}// namespace app

@@ -1,10 +1,13 @@
 #include <cstdint>
 #include <iostream>
+#include <memory>
 
 #include "../include/Field.h"
 
+namespace app
+{
+
 Field::Field()
-	: snake_()
 {
 	for (uint8_t y = 0; y != fieldSize_; ++y)
 	{
@@ -15,7 +18,7 @@ Field::Field()
 	}
 }
 
-void Field::PrintCurrentPosition()
+void Field::PrintCurrentPositions()
 {
 	for (uint8_t y = 0; y != fieldSize_; ++y)
 	{
@@ -25,3 +28,15 @@ void Field::PrintCurrentPosition()
 		}
 	}
 }
+
+void Field::ClearAllPositions()
+{
+	Field();
+}
+
+void Field::InsertIntoField(const std::pair<uint8_t, uint8_t> &coordinates, const char &symbol)
+{
+	matrixOfField_[coordinates.first][coordinates.second] = symbol;
+}
+
+}// namespace app

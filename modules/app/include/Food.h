@@ -3,16 +3,16 @@
 namespace app
 {
 
-class Snake final
+class Food
 {
 	//
 	//! Public interface
 	//
 public:
 	//! Constructor
-	Snake();
+	Food();
 	//!
-	void MakeRandomSpawnOfSnake();
+	std::pair<int, int> GerenateRandomFood();
 };
 
-}// namespace app
+}//namespace app

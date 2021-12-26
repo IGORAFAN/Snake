@@ -5,3 +5,4 @@ project(Snake LANGUAGES CXX)
 set(CMAKE_CXX_STANDARD 20)
 
 add_subdirectory(modules/app)
+add_subdirectory(modules/utils)

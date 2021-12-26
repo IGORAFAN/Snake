@@ -3,13 +3,16 @@ cmake_minimum_required(VERSION 3.20)
 project(app LANGUAGES CXX)
 
 set(${PROJECT_NAME}_HEADERS
+        include/Constants.h
         include/Field.h
+        include/Food.h
         include/Game.h
         include/Snake.h
         )
 
 set(${PROJECT_NAME}_SOURCES
         source/Field.cpp
+        source/Food.cpp
         source/Game.cpp
         source/Main.cpp
         source/Snake.cpp
