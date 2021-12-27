@@ -1,5 +1,9 @@
 #pragma once
 
+#include "../../utils/include/Types.h"
+
+#include <memory>
+
 namespace app
 {
 
@@ -12,7 +16,17 @@ public:
 	//! Constructor
 	Food();
 	//!
-	std::pair<int, int> GerenateRandomFood();
+	utils::types::Coordinates GenerateRandomPositionOfFood();
+	//!
+	void IncrementCounterOfConsumedFood();
+	//!
+	void PrintCounterOfConsumedFood() const;
+
+private:
+	//!
+	utils::types::Coordinates currentPositionOfFood_;
+	//!
+	uint32_t countOfConsumedFood_;
 };
 
 }//namespace app

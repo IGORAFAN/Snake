@@ -7,19 +7,21 @@ namespace app
 {
 
 Game::Game()
-	: isGameRunning_(false),
-	  currentStateOfGame_(GameState::BREAKGAME),
-	  field_(),
-	  food_(),
-	  snake_()
+	: isGameRunning_(false), currentStateOfGame_(utils::enums::GameState::PAUSEGAME), field_(),
+	  food_(), snake_()
 {}
 
 void Game::GenerateNewGame()
 {
-	field_.
+	field_.ClearMatrix();
+	field_.GenerateRandomWall();
+	snake_.ClearMatrix();
+	snake_.MakeRandomSpawnOfSnake();
+	field_.InsertIntoMatrix(food_.GenerateRandomPositionOfFood(), utils::enums::Objects::FOOD);
+	field_.InsertIntoMatrix(snake_);
 }
 
-void Game::Start()
+[[noreturn]] void Game::Start()
 {
 	isGameRunning_ = true;
 	std::cout << "Start game" << std::endl;
@@ -28,19 +30,34 @@ void Game::Start()
 	{
 		switch (currentStateOfGame_)
 		{
-			case GameState::BREAKGAME:;
+			case utils::enums::GameState::PAUSEGAME:
+				//------
 				break;
-			case GameState::STARTGAME:
+			case utils::enums::GameState::STARTGAME:
 				GenerateNewGame();
 				field_.PrintCurrentPositions();
-				currentStateOfGame_ = GameState::GAMEINPROCESS;
+				currentStateOfGame_ = utils::enums::GameState::GAMEINPROCESS;
 				break;
-			case GameState::GAMEINPROCESS:
+			case utils::enums::GameState::GAMEINPROCESS: {
+				snake_.MakeMove();
+				const auto res = field_.CheckSnakeCollision(snake_);
+				if (res == utils::enums::CollisionWith::WALL ||
+					res == utils::enums::CollisionWith::SNAKE)
+				{
+					currentStateOfGame_ = utils::enums::GameState::FINALGAME;
+				}
+				else if (res == utils::enums::CollisionWith::FOOD)
+				{
+					food_.IncrementCounterOfConsumedFood();
+					food_.GenerateRandomPositionOfFood();
+					field_.
+				}
 				field_.PrintCurrentPositions();
+				food_.PrintCounterOfConsumedFood();
 				break;
-			case GameState::FINALGAME:;
-				break;
-			default:
+			}
+			case utils::enums::GameState::FINALGAME:
+				//------
 				break;
 		}
 

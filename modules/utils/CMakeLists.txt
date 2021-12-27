@@ -4,6 +4,7 @@ project(utils LANGUAGES CXX)
 
 Set(${PROJECT_NAME}_HEADERS
         include/RandomGenerator.h
+        include/Types.h
         )
 
 Set(${PROJECT_NAME}_SOURCES

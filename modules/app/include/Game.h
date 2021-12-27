@@ -7,14 +7,6 @@
 namespace app
 {
 
-enum class GameState {
-	BREAKGAME,
-	STARTGAME,
-	GAMEINPROCESS,
-	FINALGAME
-};
-
-
 
 class Game final
 {
@@ -25,7 +17,7 @@ public:
 	//!
 	Game();
 	//!
-	void Start();
+	[[noreturn]] void Start();
 	//!
 	void Stop();
 
@@ -38,11 +30,9 @@ private:
 
 private:
 	//!
-	static constexpr uint8_t gameSize_ = 16;
-	//!
 	bool isGameRunning_;
 	//!
-	GameState currentStateOfGame_;
+	utils::enums::GameState currentStateOfGame_;
 	//!
 	Field field_;
 	//!

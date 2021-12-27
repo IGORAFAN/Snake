@@ -17,6 +17,11 @@
 
 #pragma once
 
+#include "../../utils/include/Types.h"
+#include "Constants.h"
+#include "Snake.h"
+#include "Food.h"
+
 namespace app
 {
 
@@ -30,29 +35,25 @@ public:
 	Field();
 
 	//!
-	bool CheckSnakeCollision();
-	//!
-	void ClearAllPositions();
+	void ClearMatrix();
 	//!
 	void PrintCurrentPositions();
 	//!
-	void InsertIntoField(const std::pair<uint8_t, uint8_t> &coordinates, const char &symbol);
+	bool InsertIntoMatrix(const utils::types::Coordinates &pos, const utils::enums::Objects &obj);
+	//!
+	bool InsertIntoMatrix(const Snake &snake);
+	//!
+	bool InsertIntoMatrix(const Food &food);
+	//!
+	void GenerateRandomWall();
+	//!
+	bool CheckCollision(const utils::types::Coordinates &pos);
+	//!
+	const utils::enums::CollisionWith CheckSnakeCollision(const Snake &snake);
 
-
-	//
-	// Private methods
-	//
 private:
 	//!
-	void GenerateRandomWalls();
-
-
-private:
-	static constexpr char16_t voidSymbol_ = ' ';
-	static constexpr char16_t foodSymbol_ = '?';
-	static constexpr char16_t snakeSymbol_ = '*';
-	static constexpr uint8_t fieldSize_ = 16;
-	char matrixOfField_[fieldSize_][fieldSize_];
+	std::array<utils::enums::Objects, constants::GameSize * constants::GameSize> matrixOfField_;
 };
 
 }//namespace app
