@@ -4,11 +4,13 @@ project(utils LANGUAGES CXX)
 
 Set(${PROJECT_NAME}_HEADERS
         include/RandomGenerator.h
+        include/KeyboardManager.h
         include/Types.h
         )
 
 Set(${PROJECT_NAME}_SOURCES
         source/RandomGenerator.cpp
+        source/KeyboardManager.cpp
         )
 
 add_executable(${PROJECT_NAME}

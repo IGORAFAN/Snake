@@ -51,10 +51,18 @@ enum class CollisionWith
 
 enum class Directions
 {
-	LEFT,
-	RIGHT,
 	UP,
-	DOWN
+	DOWN,
+	RIGHT,
+	LEFT
+};
+
+enum class KeyboardKeys
+{
+	W,
+	A,
+	S,
+	D
 };
 
 enum class GameState

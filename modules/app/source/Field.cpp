@@ -84,6 +84,8 @@ bool Field::InsertIntoMatrix(const Snake &snake)
 
 bool Field::InsertIntoMatrix(const Food &food)
 {
+	const auto coordinatesOfFood = food.GetMatrixOfFood();
+	matrixOfField_.at(coordinatesOfFood.X * coordinatesOfFood.Y) = utils::enums::Objects::FOOD;
 
 }
 

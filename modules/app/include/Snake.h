@@ -21,7 +21,7 @@ public:
 	//!
 	void MakeRandomSpawnOfSnake();
 	//!
-	void MakeMove();
+	void MakeMove(const utils::enums::Directions& direction);
 	//!
 	const std::array<utils::enums::Objects, constants::GameSize * constants::GameSize> &
 	GetMatrixOfSnake() const;

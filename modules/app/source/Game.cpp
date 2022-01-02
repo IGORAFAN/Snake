@@ -1,6 +1,7 @@
 #include <iostream>
 #include <thread>
 
+#include "../../utils/include/KeyboardManager.h"
 #include "../include/Game.h"
 
 namespace app
@@ -31,33 +32,34 @@ void Game::GenerateNewGame()
 		switch (currentStateOfGame_)
 		{
 			case utils::enums::GameState::PAUSEGAME:
-				//------
+				////////////////////////////////////
 				break;
 			case utils::enums::GameState::STARTGAME:
 				GenerateNewGame();
 				field_.PrintCurrentPositions();
 				currentStateOfGame_ = utils::enums::GameState::GAMEINPROCESS;
 				break;
-			case utils::enums::GameState::GAMEINPROCESS: {
-				snake_.MakeMove();
-				const auto res = field_.CheckSnakeCollision(snake_);
-				if (res == utils::enums::CollisionWith::WALL ||
-					res == utils::enums::CollisionWith::SNAKE)
+			case utils::enums::GameState::GAMEINPROCESS:
+			{
+				snake_.MakeMove(utils::KeyboardManager::GetPressedKey());
+				const auto collisionResult = field_.CheckSnakeCollision(snake_);
+				if (collisionResult == utils::enums::CollisionWith::WALL ||
+					collisionResult == utils::enums::CollisionWith::SNAKE)
 				{
 					currentStateOfGame_ = utils::enums::GameState::FINALGAME;
 				}
-				else if (res == utils::enums::CollisionWith::FOOD)
+				else if (collisionResult == utils::enums::CollisionWith::FOOD)
 				{
 					food_.IncrementCounterOfConsumedFood();
 					food_.GenerateRandomPositionOfFood();
-					field_.
+					field_.InsertIntoMatrix(food_);
 				}
 				field_.PrintCurrentPositions();
 				food_.PrintCounterOfConsumedFood();
 				break;
 			}
 			case utils::enums::GameState::FINALGAME:
-				//------
+				////////////////////////////////////
 				break;
 		}
 

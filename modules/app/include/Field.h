@@ -47,8 +47,6 @@ public:
 	//!
 	void GenerateRandomWall();
 	//!
-	bool CheckCollision(const utils::types::Coordinates &pos);
-	//!
 	const utils::enums::CollisionWith CheckSnakeCollision(const Snake &snake);
 
 private:

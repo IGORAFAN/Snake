@@ -2,15 +2,16 @@
 #include "../include/Constants.h"
 
 #include "../../utils/include/RandomGenerator.h"
-#include "../../utils/include/Types.h"
 
 #include <iostream>
-#include <memory>
 
 namespace app
 {
 
-Food::Food() : countOfConsumedFood_(0) {}
+Food::Food()
+	: currentPositionOfFood_(constants::GameSize / 2, constants::GameSize / 2),
+	  countOfConsumedFood_(0)
+{}
 
 utils::types::Coordinates Food::GenerateRandomPositionOfFood()
 {
@@ -23,5 +24,7 @@ void Food::PrintCounterOfConsumedFood() const
 {
 	std::cout << "Score: " << countOfConsumedFood_ << std::endl;
 }
+
+const utils::types::Coordinates Food::GetMatrixOfFood() const { return currentPositionOfFood_; }
 
 }// namespace app

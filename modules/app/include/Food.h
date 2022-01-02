@@ -21,6 +21,8 @@ public:
 	void IncrementCounterOfConsumedFood();
 	//!
 	void PrintCounterOfConsumedFood() const;
+	//!
+	const utils::types::Coordinates GetMatrixOfFood() const;
 
 private:
 	//!

@@ -28,8 +28,9 @@ void Snake::MakeRandomSpawnOfSnake()
 	InsertIntoMatrix(currentPositionHeadOfSnake_, utils::enums::Objects::SNAKE);
 }
 
-void Snake::MakeMove()
+void Snake::MakeMove(const utils::enums::Directions& direction)
 {
+	currentDirection_ = direction;
 	switch (currentDirection_)
 	{
 		case utils::enums::Directions::UP:
