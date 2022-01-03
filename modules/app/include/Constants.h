@@ -1,15 +1,19 @@
+#pragma once
+
+#include <stdint.h>
+
 namespace app
 {
 
 namespace constants
 {
 
-static constexpr uint8_t GameSize = 16;
+static const uint8_t GameSize{16};
 
-static constexpr char16_t FoodSymbol{'?'};
-static constexpr char16_t SnakeSymbol{'*'};
-static constexpr char16_t VoidSymbol{' '};
-static constexpr char16_t WallSymbol{'|'};
+static const char16_t FoodSymbol{'?'};
+static const char16_t SnakeSymbol{'*'};
+static const char16_t VoidSymbol{' '};
+static const char16_t WallSymbol{'|'};
 
 }// namespace constants
 

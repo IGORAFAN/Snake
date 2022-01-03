@@ -17,7 +17,7 @@ public:
 	//!
 	Game();
 	//!
-	[[noreturn]] void Start();
+	void Start();
 	//!
 	void Stop();
 
@@ -32,7 +32,7 @@ private:
 	//!
 	bool isGameRunning_;
 	//!
-	utils::enums::GameState currentStateOfGame_;
+	app::enums::GameState currentStateOfGame_;
 	//!
 	Field field_;
 	//!

@@ -4,7 +4,7 @@
 
 int main()
 {
-	Game game;
+	app::Game game;
 	try
 	{
 		game.Start();

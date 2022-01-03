@@ -4,6 +4,7 @@ project(app LANGUAGES CXX)
 
 set(${PROJECT_NAME}_HEADERS
         include/Constants.h
+        include/Enums.h
         include/Field.h
         include/Food.h
         include/Game.h
@@ -18,9 +19,13 @@ set(${PROJECT_NAME}_SOURCES
         source/Snake.cpp
         )
 
-add_executable(${PROJECT_NAME}
+add_library(${PROJECT_NAME}
         ${${PROJECT_NAME}_HEADERS}
         ${${PROJECT_NAME}_SOURCES}
         )
 
+add_library(snake::app ALIAS ${PROJECT_NAME})
+
 target_compile_features(${PROJECT_NAME} PUBLIC cxx_std_17)
+
+target_link_libraries(${PROJECT_NAME} PUBLIC snake::utils)

@@ -13,7 +13,13 @@ Set(${PROJECT_NAME}_SOURCES
         source/KeyboardManager.cpp
         )
 
-add_executable(${PROJECT_NAME}
+add_library(${PROJECT_NAME}
         ${${PROJECT_NAME}_HEADERS}
         ${${PROJECT_NAME}_SOURCES}
         )
+
+add_library(snake::utils ALIAS ${PROJECT_NAME})
+
+target_compile_features(${PROJECT_NAME} PUBLIC cxx_std_17)
+
+target_link_libraries(${PROJECT_NAME} PUBLIC snake::app)

@@ -1,37 +1,42 @@
+#include "../../app/include/Enums.h"
+
 #include "../include/KeyboardManager.h"
+
 #include <cstdio>
 
 namespace utils
 {
 
-utils::enums::KeyboardKeys KeyboardManager::GetPressedKey()
+app::enums::KeyboardKeys KeyboardManager::GetPressedKey()
 {
 	switch (getchar())
 	{
-		case 119:
-			return utils::enums::KeyboardKeys::W;
-		case 115:
-			return utils::enums::KeyboardKeys::S;
-		case 100:
-			return utils::enums::KeyboardKeys::D;
-		case 97:
-			return utils::enums::KeyboardKeys::A;
+		case static_cast<int>('w'):
+			return app::enums::KeyboardKeys::W;
+		case static_cast<int>('s'):
+			return app::enums::KeyboardKeys::S;
+		case static_cast<int>('d'):
+			return app::enums::KeyboardKeys::D;
+		case static_cast<int>('a'):
+			return app::enums::KeyboardKeys::A;
+		case static_cast<int>('p'):
+			return app::enums::KeyboardKeys::P;
 	}
 }
 
-utils::enums::Directions
-KeyboardManager::GetDirectionFromPressedKeys(const utils::enums::KeyboardKeys &key)
+app::enums::Directions
+KeyboardManager::GetDirectionFromPressedKey(const app::enums::KeyboardKeys &key)
 {
 	switch (key)
 	{
-		case utils::enums::KeyboardKeys::W:
-			return utils::enums::Directions::UP;
-		case utils::enums::KeyboardKeys::S:
-			return utils::enums::Directions::DOWN;
-		case utils::enums::KeyboardKeys::D:
-			return utils::enums::Directions::RIGHT;
-		case utils::enums::KeyboardKeys::A:
-			return utils::enums::Directions::LEFT;
+		case app::enums::KeyboardKeys::W:
+			return app::enums::Directions::UP;
+		case app::enums::KeyboardKeys::S:
+			return app::enums::Directions::DOWN;
+		case app::enums::KeyboardKeys::D:
+			return app::enums::Directions::RIGHT;
+		case app::enums::KeyboardKeys::A:
+			return app::enums::Directions::LEFT;
 	}
 }
 

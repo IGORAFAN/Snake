@@ -7,8 +7,7 @@
 namespace utils
 {
 
-utils::types::Coordinates
-RandomGenerator::GetRandomCoordinates(int32_t rangeFrom, int32_t rangeTo)
+utils::types::Coordinates RandomGenerator::GetRandomCoordinates(int32_t rangeFrom, int32_t rangeTo)
 {
 	const auto x = (rangeFrom + rand() % (rangeTo - rangeFrom));
 	const auto y = (rangeFrom + rand() % (rangeTo - rangeFrom));

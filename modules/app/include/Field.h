@@ -39,7 +39,7 @@ public:
 	//!
 	void PrintCurrentPositions();
 	//!
-	bool InsertIntoMatrix(const utils::types::Coordinates &pos, const utils::enums::Objects &obj);
+	bool InsertIntoMatrix(const utils::types::Coordinates &pos, const enums::Objects &obj);
 	//!
 	bool InsertIntoMatrix(const Snake &snake);
 	//!
@@ -47,11 +47,11 @@ public:
 	//!
 	void GenerateRandomWall();
 	//!
-	const utils::enums::CollisionWith CheckSnakeCollision(const Snake &snake);
+	const enums::CollisionWith CheckSnakeCollision(const Snake &snake);
 
 private:
 	//!
-	std::array<utils::enums::Objects, constants::GameSize * constants::GameSize> matrixOfField_;
+	std::array<enums::Objects, constants::GameSize * constants::GameSize> matrixOfField_;
 };
 
 }//namespace app

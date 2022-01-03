@@ -1,7 +1,9 @@
 #pragma once
 
-#include "../../utils/include/Types.h"
 #include "Constants.h"
+#include "Enums.h"
+
+#include "../../utils/include/Types.h"
 
 #include <memory>
 
@@ -21,18 +23,18 @@ public:
 	//!
 	void MakeRandomSpawnOfSnake();
 	//!
-	void MakeMove(const utils::enums::Directions& direction);
+	void MakeMove(const enums::Directions& direction);
 	//!
-	const std::array<utils::enums::Objects, constants::GameSize * constants::GameSize> &
+	const std::array<enums::Objects, constants::GameSize * constants::GameSize> &
 	GetMatrixOfSnake() const;
 	//!
 	void InsertIntoMatrix(const utils::types::Coordinates &pos,
-						  const utils::enums::Objects &obj);
+						  const enums::Objects &obj);
 
 private:
 	utils::types::Coordinates currentPositionHeadOfSnake_;
-	utils::enums::Directions currentDirection_;
-	std::array<utils::enums::Objects, constants::GameSize * constants::GameSize> matrixOfSnake_;
+	enums::Directions currentDirection_;
+	std::array<enums::Objects, constants::GameSize * constants::GameSize> matrixOfSnake_;
 };
 
 }// namespace app
