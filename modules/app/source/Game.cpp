@@ -8,7 +8,7 @@ namespace app
 {
 
 Game::Game()
-	: isGameRunning_(false), currentStateOfGame_(app::enums::GameState::PAUSEGAME), field_(),
+	: isGameRunning_(false), currentStateOfGame_(app::enums::GameState::STARTGAME), field_(),
 	  food_(), snake_()
 {}
 
@@ -24,13 +24,14 @@ void Game::GenerateNewGame()
 
 using namespace utils;
 
-void Game::Start()
+[[noreturn]] void Game::Start()
 {
 	isGameRunning_ = true;
 	std::cout << "Start game" << std::endl;
 
 	while (isGameRunning_)
 	{
+		std::cout << "currentStateOfGame: " << static_cast<int>(currentStateOfGame_) << std::endl;
 		switch (currentStateOfGame_)
 		{
 			case enums::GameState::PAUSEGAME:
@@ -73,7 +74,7 @@ void Game::Start()
 		}
 
 		std::this_thread::sleep_for(std::chrono::milliseconds(500));
-		system("cls");
+		system("clear");
 	}
 }
 

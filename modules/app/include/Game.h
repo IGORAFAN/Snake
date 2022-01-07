@@ -17,7 +17,7 @@ public:
 	//!
 	Game();
 	//!
-	void Start();
+	[[noreturn]] void Start();
 	//!
 	void Stop();
 

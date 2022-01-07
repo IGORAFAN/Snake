@@ -16,7 +16,7 @@ public:
 	//!
 	Coordinates();
 	//!
-	Coordinates(int32_t CorX, int32_t CorY) : X(CorX), Y(CorY) {}
+	Coordinates(int32_t CorX, int32_t CorY);
 
 	//
 	//! Public fields

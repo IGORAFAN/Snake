@@ -11,9 +11,14 @@ Set(${PROJECT_NAME}_HEADERS
 Set(${PROJECT_NAME}_SOURCES
         source/RandomGenerator.cpp
         source/KeyboardManager.cpp
+        source/Type.cpp
         )
 
 add_library(${PROJECT_NAME}
         ${${PROJECT_NAME}_HEADERS}
         ${${PROJECT_NAME}_SOURCES}
         )
+
+add_library(snake::utils ALIAS ${PROJECT_NAME})
+
+target_compile_features(${PROJECT_NAME} PUBLIC cxx_std_17)
