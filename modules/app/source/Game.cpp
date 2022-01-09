@@ -15,11 +15,20 @@ Game::Game()
 void Game::GenerateNewGame()
 {
 	field_.ClearMatrix();
-	field_.GenerateRandomWall();
 	snake_.ClearMatrix();
+	field_.GenerateRandomWall();
 	snake_.MakeRandomSpawnOfSnake();
-	field_.InsertIntoMatrix(food_.GenerateRandomPositionOfFood(), app::enums::Objects::FOOD);
+	while (field_.CheckSnakeCollision(snake_) != enums::CollisionWith::NONE)
+	{
+		snake_.MakeRandomSpawnOfSnake();
+	}
 	field_.InsertIntoMatrix(snake_);
+	food_.MakeRandomSpawnOfFood();
+	while (field_.CheckFoodCollision(food_) != enums::CollisionWith::NONE)
+	{
+		food_.MakeRandomSpawnOfFood();
+	}
+	field_.InsertIntoMatrix(food_);
 }
 
 using namespace utils;
@@ -31,50 +40,65 @@ using namespace utils;
 
 	while (isGameRunning_)
 	{
-		std::cout << "currentStateOfGame: " << static_cast<int>(currentStateOfGame_) << std::endl;
 		switch (currentStateOfGame_)
 		{
 			case enums::GameState::PAUSEGAME:
+			{
+				std::cout << "PAUSEGAME" << std::endl;
 				////////////////////////////////////
 				break;
+			}
 			case enums::GameState::STARTGAME:
+			{
+				std::cout << "STARTGAME" << std::endl;
 				GenerateNewGame();
 				field_.PrintCurrentPositions();
 				currentStateOfGame_ = app::enums::GameState::GAMEINPROCESS;
 				break;
+			}
 			case enums::GameState::GAMEINPROCESS:
 			{
-				const auto pressedKey = KeyboardManager::GetPressedKey();
-				if (pressedKey == enums::KeyboardKeys::P)
+				std::cout << "GAMEINPROCESS" << std::endl;
+				//const auto pressedKey = KeyboardManager::GetPressedKey();
+				//if (pressedKey == enums::KeyboardKeys::P)
+				//{
+				//	currentStateOfGame_ = enums::GameState::PAUSEGAME;
+				//	break;
+				//}
+				snake_.MakeMove(enums::Directions::UP);
+				//KeyboardManager::GetDirectionFromPressedKey(pressedKey));
+				const auto collisionResult = field_.CheckSnakeCollision(snake_);
+				if (collisionResult == enums::CollisionWith::WALL)
 				{
-					currentStateOfGame_ = enums::GameState::PAUSEGAME;
+					std::cout << "Collision with Wall" << std::endl;
+					currentStateOfGame_ = enums::GameState::FINALGAME;
 					break;
 				}
-				snake_.MakeMove(KeyboardManager::GetDirectionFromPressedKey(pressedKey));
-				const auto collisionResult = field_.CheckSnakeCollision(snake_);
-				if (collisionResult == enums::CollisionWith::WALL ||
-					collisionResult == enums::CollisionWith::SNAKE)
+				if (collisionResult == enums::CollisionWith::SNAKE)
 				{
+					std::cout << "Collision with Snake" << std::endl;
 					currentStateOfGame_ = enums::GameState::FINALGAME;
 					break;
 				}
 				else if (collisionResult == enums::CollisionWith::FOOD)
 				{
 					food_.IncrementCounterOfConsumedFood();
-					food_.GenerateRandomPositionOfFood();
+					food_.MakeRandomSpawnOfFood();
 					field_.InsertIntoMatrix(food_);
 				}
+				field_.InsertIntoMatrix(snake_);
 				field_.PrintCurrentPositions();
 				food_.PrintCounterOfConsumedFood();
 				break;
 			}
 			case enums::GameState::FINALGAME:
-				////////////////////////////////////
+				std::cout << "FINALGAME" << std::endl;
+				isGameRunning_ = false;
 				break;
 		}
 
 		std::this_thread::sleep_for(std::chrono::milliseconds(500));
-		system("clear");
+		std::system("clear");
 	}
 }
 

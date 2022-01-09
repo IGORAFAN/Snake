@@ -13,9 +13,9 @@ Food::Food()
 	  countOfConsumedFood_(0)
 {}
 
-utils::types::Coordinates Food::GenerateRandomPositionOfFood()
+void Food::MakeRandomSpawnOfFood()
 {
-	return utils::RandomGenerator::GetRandomCoordinates(0, constants::GameSize);
+	currentPositionOfFood_ = utils::RandomGenerator::GetRandomCoordinates(0, constants::GameSize);
 }
 
 void Food::IncrementCounterOfConsumedFood() { ++countOfConsumedFood_; }
@@ -25,6 +25,6 @@ void Food::PrintCounterOfConsumedFood() const
 	std::cout << "Score: " << countOfConsumedFood_ << std::endl;
 }
 
-const utils::types::Coordinates Food::GetMatrixOfFood() const { return currentPositionOfFood_; }
+const utils::types::Coordinates Food::GetPositionOfFood() const { return currentPositionOfFood_; }
 
 }// namespace app

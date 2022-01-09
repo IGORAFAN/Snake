@@ -13,26 +13,16 @@
 namespace app
 {
 
-Field::Field()
-{
-	utils::types::Coordinates pos;
-	for (pos.X = 0; pos.X != constants::GameSize - 1; ++pos.X)
-	{
-		for (pos.Y = 0; pos.Y != constants::GameSize - 1; ++pos.Y)
-		{
-			matrixOfField_.at(pos.X * pos.Y) = app::enums::Objects::NONE;
-		}
-	}
-}
+Field::Field() { ClearMatrix(); }
 
 void Field::PrintCurrentPositions()
 {
 	utils::types::Coordinates pos;
-	for (pos.X = 0; pos.X != constants::GameSize - 1; ++pos.X)
+	for (pos.Y = 0; pos.Y != constants::GameSize; ++pos.Y)
 	{
-		for (pos.Y = 0; pos.Y != constants::GameSize - 1; ++pos.Y)
+		for (pos.X = 0; pos.X != constants::GameSize; ++pos.X)
 		{
-			switch (matrixOfField_.at(pos.X * pos.Y))
+			switch (matrixOfField_.at(pos.Y).at(pos.X))
 			{
 				case app::enums::Objects::NONE:
 					std::cout << constants::VoidSymbol;
@@ -47,22 +37,20 @@ void Field::PrintCurrentPositions()
 					std::cout << constants::WallSymbol;
 					break;
 			}
+			if (pos.X == constants::GameSize - 1) std::cout << std::endl;
 		}
 	}
 }
 
-void Field::ClearMatrix() { Field(); }
-
-bool Field::InsertIntoMatrix(const utils::types::Coordinates &pos, const app::enums::Objects &obj)
+void Field::ClearMatrix()
 {
-	if (matrixOfField_.at(pos.X * pos.Y) == app::enums::Objects::NONE)
+	utils::types::Coordinates pos;
+	for (pos.Y = 0; pos.Y != constants::GameSize; ++pos.Y)
 	{
-		matrixOfField_.at(pos.X * pos.Y) = obj;
-		return true;
-	}
-	else
-	{
-		return false;
+		for (pos.X = 0; pos.X != constants::GameSize; ++pos.X)
+		{
+			matrixOfField_.at(pos.Y).at(pos.X) = app::enums::Objects::NONE;
+		}
 	}
 }
 
@@ -70,13 +58,13 @@ bool Field::InsertIntoMatrix(const Snake &snake)
 {
 	const auto coordinatesOfSnake = snake.GetMatrixOfSnake();
 	utils::types::Coordinates pos;
-	for (pos.X = 0; pos.X != constants::GameSize - 1; ++pos.X)
+	for (pos.Y = 0; pos.Y != constants::GameSize; ++pos.Y)
 	{
-		for (pos.Y = 0; pos.Y != constants::GameSize - 1; ++pos.Y)
+		for (pos.X = 0; pos.X != constants::GameSize; ++pos.X)
 		{
-			if (coordinatesOfSnake.at(pos.X * pos.Y) == app::enums::Objects::SNAKE)
+			if (coordinatesOfSnake.at(pos.Y).at(pos.X) == app::enums::Objects::SNAKE)
 			{
-				matrixOfField_.at(pos.X * pos.Y) = coordinatesOfSnake.at(pos.X * pos.Y);
+				matrixOfField_.at(pos.Y).at(pos.X) = coordinatesOfSnake.at(pos.Y).at(pos.X);
 			}
 		}
 	}
@@ -84,27 +72,27 @@ bool Field::InsertIntoMatrix(const Snake &snake)
 
 bool Field::InsertIntoMatrix(const Food &food)
 {
-	const auto coordinatesOfFood = food.GetMatrixOfFood();
-	matrixOfField_.at(coordinatesOfFood.X * coordinatesOfFood.Y) = app::enums::Objects::FOOD;
-
+	const auto coordinatesOfFood = food.GetPositionOfFood();
+	matrixOfField_.at(coordinatesOfFood.Y).at(coordinatesOfFood.X) = app::enums::Objects::FOOD;
 }
 
 void Field::GenerateRandomWall()
 {
-	const auto firstPoint = utils::RandomGenerator::GetRandomCoordinates(0, constants::GameSize);
+	//const auto firstPoint = utils::RandomGenerator::GetRandomCoordinates(0, constants::GameSize);
 }
 
-const app::enums::CollisionWith Field::CheckSnakeCollision(const Snake &snake)
+enums::CollisionWith Field::CheckSnakeCollision(const Snake &snake)
 {
 	const auto snakePosition = snake.GetMatrixOfSnake();
+	const auto headOfSnakePosition = snake.GetHeadOfSnake();
 	utils::types::Coordinates pos;
-	for (pos.X = 0; pos.X != constants::GameSize - 1; ++pos.X)
+	for (pos.Y = 0; pos.Y != constants::GameSize; ++pos.Y)
 	{
-		for (pos.Y = 0; pos.Y != constants::GameSize - 1; ++pos.Y)
+		for (pos.X = 0; pos.X != constants::GameSize; ++pos.X)
 		{
-			if (snakePosition.at(pos.X * pos.Y) == app::enums::Objects::SNAKE)
+			if (snakePosition.at(pos.Y).at(pos.X) == app::enums::Objects::SNAKE)
 			{
-				switch (matrixOfField_.at(pos.X * pos.Y))
+				switch (matrixOfField_.at(pos.Y).at(pos.X))
 				{
 					case app::enums::Objects::FOOD:
 						return app::enums::CollisionWith::FOOD;
@@ -116,6 +104,22 @@ const app::enums::CollisionWith Field::CheckSnakeCollision(const Snake &snake)
 			}
 		}
 	}
+	return enums::CollisionWith::NONE;
+}
+
+enums::CollisionWith Field::CheckFoodCollision(const Food &food)
+{
+	const auto foodPosition = food.GetPositionOfFood();
+	switch (matrixOfField_.at(foodPosition.Y).at(foodPosition.X))
+	{
+		case app::enums::Objects::FOOD:
+			return app::enums::CollisionWith::FOOD;
+		case app::enums::Objects::WALL:
+			return app::enums::CollisionWith::WALL;
+		case app::enums::Objects::SNAKE:
+			return app::enums::CollisionWith::SNAKE;
+	}
+	return enums::CollisionWith::NONE;
 }
 
 }// namespace app

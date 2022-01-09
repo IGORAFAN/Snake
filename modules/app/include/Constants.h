@@ -1,5 +1,6 @@
 #pragma once
 
+#include <string>
 #include <stdint.h>
 
 namespace app
@@ -10,10 +11,10 @@ namespace constants
 
 static const uint8_t GameSize{16};
 
-static const char16_t FoodSymbol{'?'};
-static const char16_t SnakeSymbol{'*'};
-static const char16_t VoidSymbol{' '};
-static const char16_t WallSymbol{'|'};
+static const std::string FoodSymbol{'?'};
+static const std::string SnakeSymbol{'*'};
+static const std::string VoidSymbol{'.'};
+static const std::string WallSymbol{'|'};
 
 }// namespace constants
 

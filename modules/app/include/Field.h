@@ -19,8 +19,8 @@
 
 #include "../../utils/include/Types.h"
 #include "Constants.h"
-#include "Snake.h"
 #include "Food.h"
+#include "Snake.h"
 
 namespace app
 {
@@ -39,19 +39,19 @@ public:
 	//!
 	void PrintCurrentPositions();
 	//!
-	bool InsertIntoMatrix(const utils::types::Coordinates &pos, const enums::Objects &obj);
-	//!
 	bool InsertIntoMatrix(const Snake &snake);
 	//!
 	bool InsertIntoMatrix(const Food &food);
 	//!
 	void GenerateRandomWall();
 	//!
-	const enums::CollisionWith CheckSnakeCollision(const Snake &snake);
+	enums::CollisionWith CheckSnakeCollision(const Snake &snake);
+	//!
+	enums::CollisionWith CheckFoodCollision(const Food &food);
 
 private:
 	//!
-	std::array<enums::Objects, constants::GameSize * constants::GameSize> matrixOfField_;
+	std::array<std::array<enums::Objects, constants::GameSize>, constants::GameSize> matrixOfField_;
 };
 
 }//namespace app

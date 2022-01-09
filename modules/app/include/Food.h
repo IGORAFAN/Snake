@@ -16,13 +16,13 @@ public:
 	//! Constructor
 	Food();
 	//!
-	utils::types::Coordinates GenerateRandomPositionOfFood();
+	void MakeRandomSpawnOfFood();
 	//!
 	void IncrementCounterOfConsumedFood();
 	//!
 	void PrintCounterOfConsumedFood() const;
 	//!
-	const utils::types::Coordinates GetMatrixOfFood() const;
+	const utils::types::Coordinates GetPositionOfFood() const;
 
 private:
 	//!
