@@ -1,11 +1,12 @@
 #pragma once
 
+#include "../../utils/include/Types.h"
+
 #include "Constants.h"
 #include "Enums.h"
 
-#include "../../utils/include/Types.h"
-
 #include <memory>
+#include <queue>
 
 namespace app
 {
@@ -19,26 +20,21 @@ public:
 	//! Constructor
 	Snake();
 	//!
-	void ClearMatrix();
+	void ClearElementsOfSnake();
 	//!
 	void MakeRandomSpawnOfSnake();
 	//!
 	void MakeMove(const enums::Directions &direction);
 	//!
-	const std::array<std::array<enums::Objects, constants::GameSize>, constants::GameSize> &
-	GetMatrixOfSnake() const;
+	const std::queue<utils::types::Coordinates> &GetElementsOfSnake() const;
 	//!
 	const utils::types::Coordinates &GetHeadOfSnake() const;
 
-private:
-	//!
-	void InsertIntoSnakeMatrix(const utils::types::Coordinates &pos, const enums::Objects &obj);
 
 private:
-	utils::types::Coordinates currentPositionOfHeadOfSnake_;
-	utils::types::Coordinates currentPositionOfTailOfSnake_;
 	enums::Directions currentDirection_;
-	std::array<std::array<enums::Objects, constants::GameSize>, constants::GameSize> matrixOfSnake_;
+	utils::types::Coordinates currentHeadOfSnake_;
+	std::queue<utils::types::Coordinates> snakeElements_;
 };
 
 }// namespace app

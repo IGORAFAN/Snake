@@ -1,6 +1,7 @@
 #include <cstdint>
 #include <iostream>
 #include <memory>
+#include <queue>
 #include <stdexcept>
 
 #include "../include/Constants.h"
@@ -56,17 +57,24 @@ void Field::ClearMatrix()
 
 bool Field::InsertIntoMatrix(const Snake &snake)
 {
-	const auto coordinatesOfSnake = snake.GetMatrixOfSnake();
 	utils::types::Coordinates pos;
 	for (pos.Y = 0; pos.Y != constants::GameSize; ++pos.Y)
 	{
 		for (pos.X = 0; pos.X != constants::GameSize; ++pos.X)
 		{
-			if (coordinatesOfSnake.at(pos.Y).at(pos.X) == app::enums::Objects::SNAKE)
+			if (matrixOfField_.at(pos.Y).at(pos.X) == enums::Objects::SNAKE)
 			{
-				matrixOfField_.at(pos.Y).at(pos.X) = coordinatesOfSnake.at(pos.Y).at(pos.X);
+				matrixOfField_.at(pos.Y).at(pos.X) = enums::Objects::NONE;
 			}
 		}
+	}
+
+	auto snakeCoordinatesCopy = snake.GetElementsOfSnake();
+	while (!snakeCoordinatesCopy.empty())
+	{
+		const auto &element = snakeCoordinatesCopy.front();
+		matrixOfField_.at(element.Y).at(element.X) = enums::Objects::SNAKE;
+		snakeCoordinatesCopy.pop();
 	}
 }
 
@@ -81,28 +89,19 @@ void Field::GenerateRandomWall()
 	//const auto firstPoint = utils::RandomGenerator::GetRandomCoordinates(0, constants::GameSize);
 }
 
+
 enums::CollisionWith Field::CheckSnakeCollision(const Snake &snake)
 {
-	const auto snakePosition = snake.GetMatrixOfSnake();
 	const auto headOfSnakePosition = snake.GetHeadOfSnake();
-	utils::types::Coordinates pos;
-	for (pos.Y = 0; pos.Y != constants::GameSize; ++pos.Y)
+
+	switch (matrixOfField_.at(headOfSnakePosition.Y).at(headOfSnakePosition.X))
 	{
-		for (pos.X = 0; pos.X != constants::GameSize; ++pos.X)
-		{
-			if (snakePosition.at(pos.Y).at(pos.X) == app::enums::Objects::SNAKE)
-			{
-				switch (matrixOfField_.at(pos.Y).at(pos.X))
-				{
-					case app::enums::Objects::FOOD:
-						return app::enums::CollisionWith::FOOD;
-					case app::enums::Objects::WALL:
-						return app::enums::CollisionWith::WALL;
-					case app::enums::Objects::SNAKE:
-						return app::enums::CollisionWith::SNAKE;
-				}
-			}
-		}
+		case app::enums::Objects::FOOD:
+			return app::enums::CollisionWith::FOOD;
+		case app::enums::Objects::WALL:
+			return app::enums::CollisionWith::WALL;
+		case app::enums::Objects::SNAKE:
+			return app::enums::CollisionWith::SNAKE;
 	}
 	return enums::CollisionWith::NONE;
 }

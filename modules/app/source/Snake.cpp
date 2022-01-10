@@ -9,29 +9,22 @@
 namespace app
 {
 
-Snake::Snake() : currentDirection_(enums::Directions::UP) { ClearMatrix(); }
+Snake::Snake() : currentDirection_(enums::Directions::UP) { ClearElementsOfSnake(); }
 
-void Snake::ClearMatrix()
+void Snake::ClearElementsOfSnake()
 {
-	utils::types::Coordinates pos;
-	for (pos.Y = 0; pos.Y != constants::GameSize; ++pos.Y)
-	{
-		for (pos.X = 0; pos.X != constants::GameSize; ++pos.X)
-		{
-			matrixOfSnake_.at(pos.Y).at(pos.X) = enums::Objects::NONE;
-		}
-	}
+	while (!snakeElements_.empty()) { snakeElements_.pop(); }
 }
 
 void Snake::MakeRandomSpawnOfSnake()
 {
-	currentPositionOfHeadOfSnake_ =
-			utils::RandomGenerator::GetRandomCoordinates(0, constants::GameSize);
-	InsertIntoSnakeMatrix(currentPositionOfHeadOfSnake_, enums::Objects::SNAKE);
-
-	currentPositionOfTailOfSnake_ = currentPositionOfHeadOfSnake_;
-	currentPositionOfTailOfSnake_.Y -= 1;
-	InsertIntoSnakeMatrix(currentPositionOfTailOfSnake_, enums::Objects::SNAKE);
+	const auto &headOfSnake =
+			utils::RandomGenerator::GetRandomCoordinates(0, constants::GameSize - 1);
+	auto tailOfSnake = headOfSnake;
+	tailOfSnake.Y += 1;
+	snakeElements_.emplace(tailOfSnake);
+	snakeElements_.emplace(headOfSnake);
+	currentHeadOfSnake_ = headOfSnake;
 }
 
 void Snake::MakeMove(const enums::Directions &direction)
@@ -54,31 +47,46 @@ void Snake::MakeMove(const enums::Directions &direction)
 			shiftX += 1;
 			break;
 	}
+
+	utils::types::Coordinates newPositionOfHeadOfSnake = currentHeadOfSnake_;
 	//! Move the head of the snake
-	currentPositionOfHeadOfSnake_.Y += shiftY;
-	currentPositionOfHeadOfSnake_.X += shiftX;
-	InsertIntoSnakeMatrix(currentPositionOfHeadOfSnake_, enums::Objects::SNAKE);
+	if (newPositionOfHeadOfSnake.Y + shiftY < 0)
+	{
+		newPositionOfHeadOfSnake.Y += shiftY + constants::GameSize;
+		newPositionOfHeadOfSnake.X += shiftX;
+	}
+	else if (newPositionOfHeadOfSnake.X + shiftX < 0)
+	{
+		newPositionOfHeadOfSnake.Y += shiftY;
+		newPositionOfHeadOfSnake.X += shiftX + constants::GameSize;
+	}
+	else if (newPositionOfHeadOfSnake.Y + shiftY > constants::GameSize)
+	{
+		newPositionOfHeadOfSnake.Y += shiftY - constants::GameSize;
+		newPositionOfHeadOfSnake.X += shiftX;
+	}
+	else if (newPositionOfHeadOfSnake.X + shiftX > constants::GameSize)
+	{
+		newPositionOfHeadOfSnake.Y += shiftY;
+		newPositionOfHeadOfSnake.X += shiftX - constants::GameSize;
+	}
+	else
+	{
+		newPositionOfHeadOfSnake.Y += shiftY;
+		newPositionOfHeadOfSnake.X += shiftX;
+	}
+	snakeElements_.emplace(newPositionOfHeadOfSnake);
+	currentHeadOfSnake_ = newPositionOfHeadOfSnake;
 
 	//! Move the tail of the snake
-	InsertIntoSnakeMatrix(currentPositionOfTailOfSnake_, enums::Objects::NONE);
-	currentPositionOfTailOfSnake_.Y += shiftY;
-	currentPositionOfTailOfSnake_.X += shiftX;
+	snakeElements_.pop();
 }
 
-const std::array<std::array<enums::Objects, constants::GameSize>, constants::GameSize> &
-Snake::GetMatrixOfSnake() const
+const std::queue<utils::types::Coordinates> &Snake::GetElementsOfSnake() const
 {
-	return matrixOfSnake_;
+	return snakeElements_;
 }
 
-const utils::types::Coordinates &Snake::GetHeadOfSnake() const
-{
-	return currentPositionOfHeadOfSnake_;
-}
-
-void Snake::InsertIntoSnakeMatrix(const utils::types::Coordinates &pos, const enums::Objects &obj)
-{
-	matrixOfSnake_.at(pos.Y).at(pos.X) = obj;
-}
+const utils::types::Coordinates &Snake::GetHeadOfSnake() const { return currentHeadOfSnake_; }
 
 }// namespace app

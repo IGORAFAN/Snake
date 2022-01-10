@@ -15,7 +15,7 @@ Game::Game()
 void Game::GenerateNewGame()
 {
 	field_.ClearMatrix();
-	snake_.ClearMatrix();
+	snake_.ClearElementsOfSnake();
 	field_.GenerateRandomWall();
 	snake_.MakeRandomSpawnOfSnake();
 	while (field_.CheckSnakeCollision(snake_) != enums::CollisionWith::NONE)
@@ -65,7 +65,7 @@ using namespace utils;
 				//	currentStateOfGame_ = enums::GameState::PAUSEGAME;
 				//	break;
 				//}
-				snake_.MakeMove(enums::Directions::UP);
+				snake_.MakeMove(enums::Directions::DOWN);
 				//KeyboardManager::GetDirectionFromPressedKey(pressedKey));
 				const auto collisionResult = field_.CheckSnakeCollision(snake_);
 				if (collisionResult == enums::CollisionWith::WALL)
@@ -97,7 +97,7 @@ using namespace utils;
 				break;
 		}
 
-		std::this_thread::sleep_for(std::chrono::milliseconds(500));
+		std::this_thread::sleep_for(std::chrono::milliseconds(1000));
 		std::system("clear");
 	}
 }
