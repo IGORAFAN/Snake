@@ -26,6 +26,8 @@ public:
 	//!
 	void MakeMove(const enums::Directions &direction);
 	//!
+	const enums::Directions& GetCurrentDirections() const;
+	//!
 	const std::queue<utils::types::Coordinates> &GetElementsOfSnake() const;
 	//!
 	const utils::types::Coordinates &GetHeadOfSnake() const;

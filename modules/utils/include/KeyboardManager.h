@@ -1,8 +1,8 @@
 #pragma once
 
-#include "Types.h"
-
 #include "../../app/include/Enums.h"
+
+#include "Types.h"
 
 namespace utils
 {
@@ -11,10 +11,10 @@ class KeyboardManager
 {
 public:
 	//!
-	static app::enums::KeyboardKeys GetPressedKey();
+	static void GetPressedKey(app::enums::KeyboardKeys &key);
 	//!
-	static app::enums::Directions
-	GetDirectionFromPressedKey(const app::enums::KeyboardKeys& key);
+	static void GetDirectionFromPressedKey(const app::enums::KeyboardKeys &key,
+										   app::enums::Directions &dir);
 };
 
 }// namespace utils

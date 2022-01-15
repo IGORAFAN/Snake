@@ -3,10 +3,12 @@
 #include "Field.h"
 #include "Food.h"
 #include "Snake.h"
+#include "Wall.h"
+
+#include <mutex>
 
 namespace app
 {
-
 
 class Game final
 {
@@ -17,7 +19,7 @@ public:
 	//!
 	Game();
 	//!
-	[[noreturn]] void Start();
+	void Start();
 	//!
 	void Stop();
 
@@ -28,7 +30,12 @@ private:
 	//!
 	void GenerateNewGame();
 
+	//
+	//! Private members
+	//
 private:
+	//!
+	std::mutex mutex_[3];
 	//!
 	bool isGameRunning_;
 	//!
@@ -39,6 +46,8 @@ private:
 	Food food_;
 	//!
 	Snake snake_;
+	//!
+	Wall wall_;
 };
 
 }// namespace app

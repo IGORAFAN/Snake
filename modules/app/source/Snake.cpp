@@ -82,6 +82,11 @@ void Snake::MakeMove(const enums::Directions &direction)
 	snakeElements_.pop();
 }
 
+const enums::Directions& Snake::GetCurrentDirections() const
+{
+	return currentDirection_;
+}
+
 const std::queue<utils::types::Coordinates> &Snake::GetElementsOfSnake() const
 {
 	return snakeElements_;

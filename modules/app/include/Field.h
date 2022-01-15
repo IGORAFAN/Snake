@@ -1,26 +1,12 @@
-//                //
-//                //
-//                //
-//       ?        //
-//       *        //
-//       ***      //
-//         *      //
-//         *      //
-//    ******      //
-//    *           //
-//    *           //
-//    *           //
-//                //
-//                //
-//                //
-//                //
 
 #pragma once
 
 #include "../../utils/include/Types.h"
+
 #include "Constants.h"
 #include "Food.h"
 #include "Snake.h"
+#include "Wall.h"
 
 namespace app
 {
@@ -33,21 +19,23 @@ class Field final
 public:
 	//! Constructor
 	Field();
-
 	//!
 	void ClearMatrix();
 	//!
-	void PrintCurrentPositions();
+	const std::array<std::array<enums::Objects, constants::GameSize>, constants::GameSize> &
+	GetMatrixOfFields() const;
 	//!
-	bool InsertIntoMatrix(const Snake &snake);
+	void InsertIntoMatrix(const Food &food);
 	//!
-	bool InsertIntoMatrix(const Food &food);
+	void InsertIntoMatrix(const Snake &snake);
 	//!
-	void GenerateRandomWall();
+	void InsertIntoMatrix(const Wall &wall);
 	//!
-	enums::CollisionWith CheckSnakeCollision(const Snake &snake);
+	enums::CollisionWith CheckCollision(const Snake &snake);
 	//!
-	enums::CollisionWith CheckFoodCollision(const Food &food);
+	enums::CollisionWith CheckCollision(const Food &food);
+	//!
+	enums::CollisionWith CheckCollision(const Wall &wall);
 
 private:
 	//!
