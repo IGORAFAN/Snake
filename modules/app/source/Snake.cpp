@@ -9,17 +9,20 @@
 namespace app
 {
 
-Snake::Snake() : currentDirection_(enums::Directions::UP) { ClearElementsOfSnake(); }
+Snake::Snake() : isGrowUpNow_(false), lastDirection_(enums::Directions::UP)
+{
+	ClearElementsOfSnake();
+}
 
 void Snake::ClearElementsOfSnake()
 {
 	while (!snakeElements_.empty()) { snakeElements_.pop(); }
 }
 
-void Snake::MakeRandomSpawnOfSnake()
+void Snake::MakeRandomSpawn()
 {
-	const auto &headOfSnake =
-			utils::RandomGenerator::GetRandomCoordinates(0, constants::GameSize - 1);
+	const auto headOfSnake =
+			utils::RandomGenerator::GetRandomCoordinates(0, constants::GameSize - 2);
 	auto tailOfSnake = headOfSnake;
 	tailOfSnake.Y += 1;
 	snakeElements_.emplace(tailOfSnake);
@@ -29,10 +32,10 @@ void Snake::MakeRandomSpawnOfSnake()
 
 void Snake::MakeMove(const enums::Directions &direction)
 {
-	currentDirection_ = direction;
+	lastDirection_ = direction;
 	int shiftY = 0;
 	int shiftX = 0;
-	switch (currentDirection_)
+	switch (lastDirection_)
 	{
 		case enums::Directions::UP:
 			shiftY -= 1;
@@ -45,6 +48,8 @@ void Snake::MakeMove(const enums::Directions &direction)
 			break;
 		case enums::Directions::RIGHT:
 			shiftX += 1;
+			break;
+		case enums::Directions::NONE:
 			break;
 	}
 
@@ -60,12 +65,12 @@ void Snake::MakeMove(const enums::Directions &direction)
 		newPositionOfHeadOfSnake.Y += shiftY;
 		newPositionOfHeadOfSnake.X += shiftX + constants::GameSize;
 	}
-	else if (newPositionOfHeadOfSnake.Y + shiftY > constants::GameSize)
+	else if (newPositionOfHeadOfSnake.Y + shiftY > constants::GameSize - 1)
 	{
 		newPositionOfHeadOfSnake.Y += shiftY - constants::GameSize;
 		newPositionOfHeadOfSnake.X += shiftX;
 	}
-	else if (newPositionOfHeadOfSnake.X + shiftX > constants::GameSize)
+	else if (newPositionOfHeadOfSnake.X + shiftX > constants::GameSize - 1)
 	{
 		newPositionOfHeadOfSnake.Y += shiftY;
 		newPositionOfHeadOfSnake.X += shiftX - constants::GameSize;
@@ -79,13 +84,16 @@ void Snake::MakeMove(const enums::Directions &direction)
 	currentHeadOfSnake_ = newPositionOfHeadOfSnake;
 
 	//! Move the tail of the snake
-	snakeElements_.pop();
+	if (!isGrowUpNow_) { snakeElements_.pop(); }
+	isGrowUpNow_ = false;
 }
 
-const enums::Directions& Snake::GetCurrentDirections() const
+void Snake::GrowUpNow()
 {
-	return currentDirection_;
+	isGrowUpNow_ = true;
 }
+
+const enums::Directions &Snake::GetLastDirections() const { return lastDirection_; }
 
 const std::queue<utils::types::Coordinates> &Snake::GetElementsOfSnake() const
 {

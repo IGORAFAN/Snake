@@ -1,6 +1,7 @@
 #include "../include/Field.h"
 #include "../include/Constants.h"
 #include "../include/Snake.h"
+#include "../include/Wall.h"
 
 #include <cstdint>
 #include <iostream>
@@ -18,9 +19,10 @@ Field::Field() { ClearMatrix(); }
 
 void Field::ClearMatrix()
 {
-	for (utils::types::Coordinates pos; pos.Y != constants::GameSize; ++pos.Y)
+	utils::types::Coordinates pos;
+	for (pos.Y = 0; pos.Y != constants::GameSize; ++pos.Y)
 	{
-		for (; pos.X != constants::GameSize; ++pos.X)
+		for (pos.X = 0; pos.X != constants::GameSize; ++pos.X)
 		{
 			matrixOfField_.at(pos.Y).at(pos.X) = app::enums::Objects::NONE;
 		}
@@ -35,9 +37,11 @@ Field::GetMatrixOfFields() const
 
 void Field::InsertIntoMatrix(const Snake &snake)
 {
-	for (utils::types::Coordinates pos; pos.Y != constants::GameSize; ++pos.Y)
+	//Clearing old positions of the snake on field before set new positions
+	utils::types::Coordinates pos;
+	for (pos.Y = 0; pos.Y != constants::GameSize; ++pos.Y)
 	{
-		for (; pos.X != constants::GameSize; ++pos.X)
+		for (pos.X = 0; pos.X != constants::GameSize; ++pos.X)
 		{
 			if (matrixOfField_.at(pos.Y).at(pos.X) == enums::Objects::SNAKE)
 			{
@@ -61,10 +65,25 @@ void Field::InsertIntoMatrix(const Food &food)
 	matrixOfField_.at(coordinatesOfFood.Y).at(coordinatesOfFood.X) = app::enums::Objects::FOOD;
 }
 
+void Field::InsertIntoMatrix(const Wall &wall)
+{
+	const auto &matrixOfWall = wall.GetMatrixOfWall();
+	utils::types::Coordinates pos;
+	for (pos.Y = 0; pos.Y != constants::GameSize; ++pos.Y)
+	{
+		for (pos.X = 0; pos.X != constants::GameSize; ++pos.X)
+		{
+			if (matrixOfWall.at(pos.Y).at(pos.X) == app::enums::Objects::WALL)
+			{
+				matrixOfField_.at(pos.Y).at(pos.X) = app::enums::Objects::WALL;
+			}
+		}
+	}
+}
+
 enums::CollisionWith Field::CheckCollision(const Snake &snake)
 {
 	const auto headOfSnakePosition = snake.GetHeadOfSnake();
-
 	switch (matrixOfField_.at(headOfSnakePosition.Y).at(headOfSnakePosition.X))
 	{
 		case app::enums::Objects::FOOD:
@@ -74,10 +93,11 @@ enums::CollisionWith Field::CheckCollision(const Snake &snake)
 		case app::enums::Objects::SNAKE:
 			return app::enums::CollisionWith::SNAKE;
 		case app::enums::Objects::NONE:
-			return app::enums::CollisionWith::NONE;
+			break;
 		default:
-			return app::enums::CollisionWith::NONE;
+			break;
 	}
+	return app::enums::CollisionWith::NONE;
 }
 
 enums::CollisionWith Field::CheckCollision(const Food &food)
@@ -92,10 +112,40 @@ enums::CollisionWith Field::CheckCollision(const Food &food)
 		case app::enums::Objects::SNAKE:
 			return app::enums::CollisionWith::SNAKE;
 		case app::enums::Objects::NONE:
-			return enums::CollisionWith::NONE;
+			break;
 		default:
-			return enums::CollisionWith::NONE;
+			break;
 	}
+	return enums::CollisionWith::NONE;
+}
+
+enums::CollisionWith Field::CheckCollision(const Wall &wall)
+{
+	const auto &matrixOfWall = wall.GetMatrixOfWall();
+	utils::types::Coordinates pos;
+	for (pos.Y = 0; pos.Y != constants::GameSize; ++pos.Y)
+	{
+		for (pos.X = 0; pos.X != constants::GameSize; ++pos.X)
+		{
+			if (matrixOfWall.at(pos.Y).at(pos.X) == enums::Objects::WALL)
+			{
+				switch (matrixOfField_.at(pos.Y).at(pos.X))
+				{
+					case app::enums::Objects::FOOD:
+						return app::enums::CollisionWith::FOOD;
+					case app::enums::Objects::WALL:
+						return app::enums::CollisionWith::WALL;
+					case app::enums::Objects::SNAKE:
+						return app::enums::CollisionWith::SNAKE;
+					case app::enums::Objects::NONE:
+						break;
+					default:
+						break;
+				}
+			}
+		}
+	}
+	return enums::CollisionWith::NONE;
 }
 
 }// namespace app

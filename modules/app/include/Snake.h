@@ -22,11 +22,13 @@ public:
 	//!
 	void ClearElementsOfSnake();
 	//!
-	void MakeRandomSpawnOfSnake();
+	void MakeRandomSpawn();
 	//!
 	void MakeMove(const enums::Directions &direction);
 	//!
-	const enums::Directions& GetCurrentDirections() const;
+	void GrowUpNow();
+	//!
+	const enums::Directions&GetLastDirections() const;
 	//!
 	const std::queue<utils::types::Coordinates> &GetElementsOfSnake() const;
 	//!
@@ -34,7 +36,8 @@ public:
 
 
 private:
-	enums::Directions currentDirection_;
+	bool isGrowUpNow_;
+	enums::Directions lastDirection_;
 	utils::types::Coordinates currentHeadOfSnake_;
 	std::queue<utils::types::Coordinates> snakeElements_;
 };

@@ -11,10 +11,9 @@ class KeyboardManager
 {
 public:
 	//!
-	static void GetPressedKey(app::enums::KeyboardKeys &key);
+	static app::enums::KeyboardKeys GetPressedKey();
 	//!
-	static void GetDirectionFromPressedKey(const app::enums::KeyboardKeys &key,
-										   app::enums::Directions &dir);
+	static app::enums::Directions GetDirectionFromPressedKey(const app::enums::KeyboardKeys &key);
 };
 
 }// namespace utils

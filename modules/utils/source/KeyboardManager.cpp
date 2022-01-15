@@ -7,49 +7,44 @@
 namespace utils
 {
 
-void KeyboardManager::GetPressedKey(app::enums::KeyboardKeys &key)
+app::enums::KeyboardKeys KeyboardManager::GetPressedKey()
 {
 	switch (getchar())
 	{
 		case (static_cast<int>('w')):
-			key = app::enums::KeyboardKeys::W;
-			break;
+			return app::enums::KeyboardKeys::W;
 		case (static_cast<int>('s')):
-			key = app::enums::KeyboardKeys::S;
-			break;
+			return app::enums::KeyboardKeys::S;
 		case (static_cast<int>('d')):
-			key = app::enums::KeyboardKeys::D;
-			break;
+			return app::enums::KeyboardKeys::D;
 		case (static_cast<int>('a')):
-			key = app::enums::KeyboardKeys::A;
-			break;
+			return app::enums::KeyboardKeys::A;
 		case (static_cast<int>('p')):
-			key = app::enums::KeyboardKeys::P;
-			break;
+			return app::enums::KeyboardKeys::P;
+		case (static_cast<int>('n')):
+			return app::enums::KeyboardKeys::N;
+		case (static_cast<int>('y')):
+			return app::enums::KeyboardKeys::Y;
 		default:
-			break;
+			return app::enums::KeyboardKeys::NONE;
 	}
 }
 
-void KeyboardManager::GetDirectionFromPressedKey(const app::enums::KeyboardKeys &key,
-												 app::enums::Directions &dir)
+app::enums::Directions
+KeyboardManager::GetDirectionFromPressedKey(const app::enums::KeyboardKeys &key)
 {
 	switch (key)
 	{
 		case app::enums::KeyboardKeys::W:
-			dir = app::enums::Directions::UP;
-			break;
+			return app::enums::Directions::UP;
 		case app::enums::KeyboardKeys::S:
-			dir = app::enums::Directions::DOWN;
-			break;
+			return app::enums::Directions::DOWN;
 		case app::enums::KeyboardKeys::D:
-			dir = app::enums::Directions::RIGHT;
-			break;
+			return app::enums::Directions::RIGHT;
 		case app::enums::KeyboardKeys::A:
-			dir = app::enums::Directions::LEFT;
-			break;
+			return app::enums::Directions::LEFT;
 		default:
-			break;
+			return app::enums::Directions::NONE;
 	}
 }
 

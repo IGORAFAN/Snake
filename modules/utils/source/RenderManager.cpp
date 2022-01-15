@@ -11,9 +11,10 @@ namespace utils
 void RenderManager::PrintField(const app::Field &field)
 {
 	const auto &matrixOfField = field.GetMatrixOfFields();
-	for (utils::types::Coordinates pos; pos.Y != app::constants::GameSize; ++pos.Y)
+	utils::types::Coordinates pos;
+	for (pos.Y = 0; pos.Y != app::constants::GameSize; ++pos.Y)
 	{
-		for (; pos.X != app::constants::GameSize; ++pos.X)
+		for (pos.X = 0; pos.X != app::constants::GameSize; ++pos.X)
 		{
 			switch (matrixOfField.at(pos.Y).at(pos.X))
 			{
@@ -34,5 +35,11 @@ void RenderManager::PrintField(const app::Field &field)
 		}
 	}
 }
+
+void RenderManager::PrintScore(const app::Score &score)
+{
+	std::cout << "Your score: " << score.GetScore() << std::endl;
+}
+
 
 }// namespace utils

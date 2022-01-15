@@ -1,23 +1,25 @@
 #include "../include/Wall.h"
-#include "../include/Enums.h"
 
 #include <array>
 
 namespace app
 {
 
-Wall::Wall()
+Wall::Wall() { ClearMatrix(); }
+
+void Wall::ClearMatrix()
 {
-	for (utils::types::Coordinates pos; pos.Y != constants::GameSize; ++pos.Y)
+	utils::types::Coordinates pos;
+	for (pos.Y = 0; pos.Y != constants::GameSize; ++pos.Y)
 	{
-		for (; pos.X != constants::GameSize; ++pos.X)
+		for (pos.X = 0; pos.X != constants::GameSize; ++pos.X)
 		{
 			matrixOfWall_.at(pos.Y).at(pos.X) = app::enums::Objects::NONE;
 		}
 	}
 }
 
-void Wall::GenerateRandomWall()
+void Wall::MakeRandomSpawn()
 {
 	//const auto firstPoint = utils::RandomGenerator::GetRandomCoordinates(0, constants::GameSize);
 }

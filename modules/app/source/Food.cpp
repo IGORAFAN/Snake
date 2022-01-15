@@ -8,22 +8,14 @@
 namespace app
 {
 
-Food::Food()
-	: currentPositionOfFood_(constants::GameSize / 2, constants::GameSize / 2),
-	  countOfConsumedFood_(0)
-{}
+Food::Food() : currentPositionOfFood_(constants::GameSize / 2, constants::GameSize / 2) {}
 
-void Food::MakeRandomSpawnOfFood()
+void Food::MakeRandomSpawn()
 {
-	currentPositionOfFood_ = utils::RandomGenerator::GetRandomCoordinates(0, constants::GameSize);
+	currentPositionOfFood_ =
+			utils::RandomGenerator::GetRandomCoordinates(0, constants::GameSize - 1);
 }
 
-void Food::IncrementCounterOfConsumedFood() { ++countOfConsumedFood_; }
-
-void Food::PrintCounterOfConsumedFood() const
-{
-	std::cout << "Score: " << countOfConsumedFood_ << std::endl;
-}
 
 const utils::types::Coordinates Food::GetPositionOfFood() const { return currentPositionOfFood_; }
 

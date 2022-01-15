@@ -16,19 +16,13 @@ public:
 	//! Constructor
 	Food();
 	//!
-	void MakeRandomSpawnOfFood();
-	//!
-	void IncrementCounterOfConsumedFood();
-	//!
-	void PrintCounterOfConsumedFood() const;
+	void MakeRandomSpawn();
 	//!
 	const utils::types::Coordinates GetPositionOfFood() const;
 
 private:
 	//!
 	utils::types::Coordinates currentPositionOfFood_;
-	//!
-	uint32_t countOfConsumedFood_;
 };
 
 }//namespace app

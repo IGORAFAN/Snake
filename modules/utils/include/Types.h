@@ -1,11 +1,8 @@
 #pragma once
 
-#include <stdint.h>
+#include <cstdint>
 
-namespace utils
-{
-
-namespace types
+namespace utils::types
 {
 
 struct Coordinates {
@@ -28,6 +25,4 @@ public:
 	int32_t Y;
 };
 
-}//namespace types
-
-}//namespace utils
+}// namespace utils::types

@@ -8,7 +8,7 @@ namespace app
 
 namespace constants
 {
-
+static const uint8_t GameSpeed = 4;
 static const uint8_t GameSize{16};
 
 static const std::string FoodSymbol{'?'};

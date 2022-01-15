@@ -3,6 +3,7 @@
 #include "Field.h"
 #include "Food.h"
 #include "Snake.h"
+#include "Score.h"
 #include "Wall.h"
 
 #include <mutex>
@@ -35,7 +36,7 @@ private:
 	//
 private:
 	//!
-	std::mutex mutex_[3];
+	std::mutex mutex_;
 	//!
 	bool isGameRunning_;
 	//!
@@ -48,6 +49,10 @@ private:
 	Snake snake_;
 	//!
 	Wall wall_;
+	//!
+	Score score_;
 };
+
+
 
 }// namespace app

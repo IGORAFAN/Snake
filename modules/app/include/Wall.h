@@ -20,7 +20,9 @@ public:
 	//! Constructor
 	Wall();
 	//!
-	void GenerateRandomWall();
+	void ClearMatrix();
+	//!
+	void MakeRandomSpawn();
 	//!
 	const std::array<std::array<enums::Objects, constants::GameSize>, constants::GameSize> &
 	GetMatrixOfWall() const;
