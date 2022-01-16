@@ -1,15 +1,17 @@
 #pragma once
 
+#include "Enums.h"
 #include "Field.h"
 #include "Food.h"
-#include "Enums.h"
 #include "Score.h"
 #include "Snake.h"
 #include "Wall.h"
+#include "Level.h"
 
 #include "../../utils/include/KeyboardManager.h"
 
 #include <mutex>
+#include <atomic>
 
 namespace app
 {
@@ -56,6 +58,8 @@ private:
 	Wall wall_;
 	//!
 	Score score_;
+	//!
+	Level level_;
 	//!
 	enums::GameState currentStateOfGame_;
 	//!

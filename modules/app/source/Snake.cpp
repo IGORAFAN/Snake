@@ -22,7 +22,7 @@ void Snake::ClearElementsOfSnake()
 void Snake::MakeRandomSpawn()
 {
 	const auto headOfSnake =
-			utils::RandomGenerator::GetRandomCoordinates(0, constants::GameSize - 2);
+			utils::RandomGenerator::GetRandomCoordinates(2, constants::GameSize - 2);
 	auto tailOfSnake = headOfSnake;
 	tailOfSnake.Y += 1;
 	snakeElements_.emplace(tailOfSnake);

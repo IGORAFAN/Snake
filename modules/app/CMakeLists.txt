@@ -10,6 +10,7 @@ set(${PROJECT_NAME}_HEADERS
         include/Field.h
         include/Food.h
         include/Game.h
+        include/Level.h
         include/Snake.h
         include/Score.h
         include/Wall.h
@@ -20,6 +21,7 @@ set(${PROJECT_NAME}_SOURCES
         source/Food.cpp
         source/Game.cpp
         source/Main.cpp
+        source/Level.cpp
         source/Snake.cpp
         source/Score.cpp
         source/Wall.cpp

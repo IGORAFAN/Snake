@@ -38,7 +38,8 @@ enum class KeyboardKeys
 	P,
 	S,
 	W,
-	Y
+	Y,
+	NONE
 };
 
 enum class GameState

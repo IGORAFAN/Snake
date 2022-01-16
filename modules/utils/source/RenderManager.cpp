@@ -34,9 +34,11 @@ void RenderManager::PrintField(const app::Field &field)
 	}
 }
 
-void RenderManager::PrintScore(const app::Score &score)
+void RenderManager::PrintScore(const app::Score &score) { std::cout << "Score: " << score.GetScore() << std::endl; }
+
+void RenderManager::PrintLevel(const app::Level &level)
 {
-	std::cout << "Score: " << score.GetScore() << std::endl;
+	std::cout << "Level: " << level.GetCuurentLevelOfGame() << std::endl;
 }
 
 void RenderManager::PrintLose(const std::string &reason, const app::Score &score)
@@ -48,9 +50,19 @@ void RenderManager::PrintLose(const std::string &reason, const app::Score &score
 
 void RenderManager::PrintSuggestNewGame()
 {
-	std::cout << std::endl
-			  << "Do you want to start a new game?" << std::endl
-			  << "Yes (y) or No (n)" << std::endl;
+	std::cout << std::endl << "Do you want to start a new game?" << std::endl << "Press: Yes (y) or Exit (n)" << std::endl;
 }
 
+void RenderManager::PrintMessage(const std::string &msg) { std::cout << msg << std::endl; }
+
+
+void RenderManager::PrintReturnToGame()
+{
+	std::cout << std::endl << "Do you want return to the game?" << std::endl << "Press: Yes (y) or Exit (n)" << std::endl;
+}
+
+void RenderManager::PrintWaiting(int sec)
+{
+	std::cout << "Get ready!!! " << sec << "sec" << std::endl;
+}
 }// namespace utils

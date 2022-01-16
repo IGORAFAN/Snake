@@ -5,14 +5,15 @@ project(utils LANGUAGES CXX)
 find_package(Threads REQUIRED)
 
 Set(${PROJECT_NAME}_HEADERS
+        include/Convertor.h
         include/RandomGenerator.h
         include/RenderManager.h
         include/KeyboardManager.h
-        include/ThreadManager.h
         include/Types.h
         )
 
 Set(${PROJECT_NAME}_SOURCES
+        source/Convertor.cpp
         source/RandomGenerator.cpp
         source/RenderManager.cpp
         source/KeyboardManager.cpp
