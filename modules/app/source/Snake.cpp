@@ -49,8 +49,6 @@ void Snake::MakeMove(const enums::Directions &direction)
 		case enums::Directions::RIGHT:
 			shiftX += 1;
 			break;
-		case enums::Directions::NONE:
-			break;
 	}
 
 	utils::types::Coordinates newPositionOfHeadOfSnake = currentHeadOfSnake_;

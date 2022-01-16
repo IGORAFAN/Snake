@@ -1,52 +1,84 @@
 #include "../include/Game.h"
+#include "../include/Enums.h"
 
 #include <iostream>
 #include <thread>
 
 #include "../../utils/include/KeyboardManager.h"
 #include "../../utils/include/RenderManager.h"
-#include "../../utils/include/ThreadManager.h"
 
 namespace app
 {
 
 Game::Game()
-	: isGameRunning_(false), currentStateOfGame_(app::enums::GameState::STARTGAME), field_(),
-	  food_(), snake_(), wall_()
+	: isGameRunning_(false), field_(), food_(), snake_(), wall_(), score_(0),
+	  currentStateOfGame_(enums::GameState::STARTGAME), currentPressedKey_(enums::KeyboardKeys::W),
+	  currentDirection_(enums::Directions::UP), keyManager_()
 {}
 
 void Game::GenerateNewGame()
 {
-	//Clear all matrix of objects after the last game
-	std::thread{[&]() { wall_.ClearMatrix(); }}.detach();
-	std::thread{[&]() { field_.ClearMatrix(); }}.detach();
-	std::thread{[&]() { snake_.ClearElementsOfSnake(); }}.detach();
+	std::thread{[&]() {
+		wall_.ClearMatrix();
+		wall_.MakeRandomSpawn();
+		mutex_.lock();
+		while (field_.CheckCollision(wall_) != enums::CollisionWith::NONE) { wall_.MakeRandomSpawn(); }
+		field_.InsertIntoMatrix(wall_);
+		mutex_.unlock();
+	}}.detach();
 
-	//!Create a wall and insert it to the game field.
-	wall_.MakeRandomSpawn();
-	while (field_.CheckCollision(wall_) != enums::CollisionWith::NONE) { wall_.MakeRandomSpawn(); }
-	field_.InsertIntoMatrix(wall_);
+	std::thread{[&]() {
+		field_.ClearMatrix();
+		mutex_.lock();
+		while (field_.CheckCollision(wall_) != enums::CollisionWith::NONE) { wall_.MakeRandomSpawn(); }
+		field_.InsertIntoMatrix(wall_);
+		mutex_.unlock();
+	}}.detach();
 
-	//!Create a snake and insert it to the game field.
-	snake_.MakeRandomSpawn();
-	while (field_.CheckCollision(snake_) != enums::CollisionWith::NONE)
-	{
+	std::thread{[&]() {
+		snake_.ClearElementsOfSnake();
 		snake_.MakeRandomSpawn();
-	}
-	field_.InsertIntoMatrix(snake_);
+		mutex_.lock();
+		while (field_.CheckCollision(snake_) != enums::CollisionWith::NONE) { snake_.MakeRandomSpawn(); }
+		field_.InsertIntoMatrix(snake_);
+		mutex_.unlock();
+	}}.detach();
 
-	//!Create a food and insert it to the game field.
-	food_.MakeRandomSpawn();
-	while (field_.CheckCollision(food_) != enums::CollisionWith::NONE) { food_.MakeRandomSpawn(); }
-	field_.InsertIntoMatrix(food_);
+	std::thread([&]() {
+		food_.MakeRandomSpawn();
+		mutex_.lock();
+		while (field_.CheckCollision(food_) != enums::CollisionWith::NONE) { food_.MakeRandomSpawn(); }
+		field_.InsertIntoMatrix(food_);
+		mutex_.unlock();
+	}).detach();
+}
+
+app::enums::Directions Game::GetDirectionFromPressedKey(const app::enums::KeyboardKeys &key)
+{
+	switch (key)
+	{
+		case app::enums::KeyboardKeys::W:
+			if (currentDirection_ != app::enums::Directions::DOWN) currentDirection_ = app::enums::Directions::UP;
+			break;
+		case app::enums::KeyboardKeys::S:
+			if (currentDirection_ != app::enums::Directions::UP) currentDirection_ = app::enums::Directions::DOWN;
+			break;
+		case app::enums::KeyboardKeys::D:
+			if (currentDirection_ != app::enums::Directions::LEFT) currentDirection_ = app::enums::Directions::RIGHT;
+			break;
+		case app::enums::KeyboardKeys::A:
+			if (currentDirection_ != app::enums::Directions::RIGHT) currentDirection_ = app::enums::Directions::LEFT;
+			break;
+		default:
+			return currentDirection_;
+	}
+	return currentDirection_;
 }
 
 void Game::Start()
 {
 	isGameRunning_ = true;
-	std::cout << "Start the game" << std::endl;
-
-	app::enums::KeyboardKeys pressedKey = enums::KeyboardKeys::NONE;
+	std::cout << "The game is started" << std::endl;
 
 	while (isGameRunning_)
 	{
@@ -61,75 +93,81 @@ void Game::Start()
 			}
 			case enums::GameState::STARTGAME:
 			{
-				std::cout << "STARTGAME" << std::endl;
+				std::cout << "STATE: STARTGAME" << std::endl;
 
 				GenerateNewGame();
 				utils::RenderManager::PrintField(field_);
+				utils::RenderManager::PrintScore(score_);
 				currentStateOfGame_ = app::enums::GameState::GAMEINPROCESS;
 				break;
 			}
 			case enums::GameState::GAMEINPROCESS:
 			{
-				std::cout << "GAMEINPROCESS" << std::endl;
+				std::cout << "STATE: GAMEINPROCESS" << std::endl;
+
+				utils::RenderManager::PrintField(field_);
+				utils::RenderManager::PrintScore(score_);
 
 				std::thread{[&]() {
-					pressedKey = utils::KeyboardManager::GetPressedKey();
+					currentPressedKey_ = keyManager_.GetPressedKey();
+					currentDirection_ = GetDirectionFromPressedKey(currentPressedKey_);
 				}}.detach();
-				if (pressedKey == enums::KeyboardKeys::P)
+				std::this_thread::sleep_for(std::chrono::milliseconds(10));
+				if (currentPressedKey_ == enums::KeyboardKeys::P)
 				{
 					currentStateOfGame_ = enums::GameState::PAUSEGAME;
 					break;
 				}
-
-				auto direction = utils::KeyboardManager::GetDirectionFromPressedKey(pressedKey);
-				if (direction == app::enums::Directions::NONE)
+				if (currentPressedKey_ == enums::KeyboardKeys::N)
 				{
-					direction = snake_.GetLastDirections();
+					isGameRunning_ = false;
+					break;
 				}
-				snake_.MakeMove(direction);
-
+				snake_.MakeMove(currentDirection_);
 				const auto collisionResult = field_.CheckCollision(snake_);
 				if (collisionResult == enums::CollisionWith::WALL)
 				{
-					std::cout << "Collision with Wall" << std::endl;
+					reasonOfFail = "Collision with Wall...";
 					currentStateOfGame_ = enums::GameState::FINALGAME;
 					break;
 				}
 				if (collisionResult == enums::CollisionWith::SNAKE)
 				{
-					std::cout << "Collision with Snake" << std::endl;
+					reasonOfFail = "Collision with Snake...";
 					currentStateOfGame_ = enums::GameState::FINALGAME;
 					break;
 				}
 				if (collisionResult == enums::CollisionWith::FOOD)
 				{
-					score_.IncrementScore();
-					food_.MakeRandomSpawn();
-					snake_.GrowUpNow();
-					field_.InsertIntoMatrix(food_);
+					std::thread{[&]() { score_.IncrementScore(); }}.detach();
+					std::thread{[&]() { snake_.GrowUpNow(); }}.detach();
+					std::thread([&]() {
+						food_.MakeRandomSpawn();
+						mutex_.lock();
+						while (field_.CheckCollision(food_) != enums::CollisionWith::NONE) { food_.MakeRandomSpawn(); }
+						field_.InsertIntoMatrix(food_);
+						mutex_.unlock();
+					}).detach();
 				}
 				field_.InsertIntoMatrix(snake_);
-				utils::RenderManager::PrintField(field_);
-				utils::RenderManager::PrintScore(score_);
 				break;
 			}
 			case enums::GameState::FINALGAME:
-				std::cout << "FINALGAME" << std::endl << std::endl;
+				std::cout << "STATE: FINALGAME" << std::endl;
 
-				std::cout << "You are lose!" << std::endl;
-				utils::RenderManager::PrintScore(score_);
-				std::cout << "Do you want to start a new game?" << std::endl
-						  << "Yes - press (y)" << std::endl
-						  << "No  - press (n)" << std::endl;
-				pressedKey = utils::KeyboardManager::GetPressedKey();
-				if (pressedKey == enums::KeyboardKeys::Y)
+				utils::RenderManager::PrintField(field_);
+				utils::RenderManager::PrintLose(reasonOfFail, score_);
+				utils::RenderManager::PrintSuggestNewGame();
+
+				currentPressedKey_ = keyManager_.GetPressedKey();
+				if (currentPressedKey_ == enums::KeyboardKeys::Y)
 				{
 					currentStateOfGame_ = enums::GameState::STARTGAME;
 					break;
 				}
-				else if (pressedKey == enums::KeyboardKeys::N)
+				else if (currentPressedKey_ == enums::KeyboardKeys::N)
 				{
-					isGameRunning_ = false;
+					Game::Stop();
 					break;
 				}
 		}
@@ -142,7 +180,7 @@ void Game::Start()
 void Game::Stop()
 {
 	isGameRunning_ = false;
-	std::cout << "Stop the game" << std::endl;
+	std::cout << "The game is stopped" << std::endl;
 }
 
 }// namespace app

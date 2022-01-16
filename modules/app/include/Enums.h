@@ -27,8 +27,7 @@ enum class Directions
 	UP,
 	DOWN,
 	RIGHT,
-	LEFT,
-	NONE
+	LEFT
 };
 
 enum class KeyboardKeys
@@ -39,8 +38,7 @@ enum class KeyboardKeys
 	P,
 	S,
 	W,
-	Y,
-	NONE
+	Y
 };
 
 enum class GameState

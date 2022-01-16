@@ -1,12 +1,10 @@
 #include "../include/RenderManager.h"
-#include "../../app/include/Constants.h"
 
 #include <array>
 #include <iostream>
 
 namespace utils
 {
-
 
 void RenderManager::PrintField(const app::Field &field)
 {
@@ -38,8 +36,21 @@ void RenderManager::PrintField(const app::Field &field)
 
 void RenderManager::PrintScore(const app::Score &score)
 {
-	std::cout << "Your score: " << score.GetScore() << std::endl;
+	std::cout << "Score: " << score.GetScore() << std::endl;
 }
 
+void RenderManager::PrintLose(const std::string &reason, const app::Score &score)
+{
+	std::cout << "YOU LOSE!" << std::endl;
+	std::cout << "Reason: " << reason << std::endl;
+	utils::RenderManager::PrintScore(score);
+}
+
+void RenderManager::PrintSuggestNewGame()
+{
+	std::cout << std::endl
+			  << "Do you want to start a new game?" << std::endl
+			  << "Yes (y) or No (n)" << std::endl;
+}
 
 }// namespace utils

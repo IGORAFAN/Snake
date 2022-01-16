@@ -2,9 +2,12 @@
 
 #include "Field.h"
 #include "Food.h"
-#include "Snake.h"
+#include "Enums.h"
 #include "Score.h"
+#include "Snake.h"
 #include "Wall.h"
+
+#include "../../utils/include/KeyboardManager.h"
 
 #include <mutex>
 
@@ -30,17 +33,19 @@ public:
 private:
 	//!
 	void GenerateNewGame();
+	//!
+	app::enums::Directions GetDirectionFromPressedKey(const app::enums::KeyboardKeys &key);
 
 	//
 	//! Private members
 	//
 private:
 	//!
-	std::mutex mutex_;
-	//!
 	bool isGameRunning_;
 	//!
-	app::enums::GameState currentStateOfGame_;
+	std::string reasonOfFail;
+	//!
+	std::mutex mutex_;
 	//!
 	Field field_;
 	//!
@@ -51,8 +56,15 @@ private:
 	Wall wall_;
 	//!
 	Score score_;
+	//!
+	enums::GameState currentStateOfGame_;
+	//!
+	enums::KeyboardKeys currentPressedKey_;
+	//!
+	enums::Directions currentDirection_;
+	//!
+	utils::KeyboardManager keyManager_;
 };
-
 
 
 }// namespace app

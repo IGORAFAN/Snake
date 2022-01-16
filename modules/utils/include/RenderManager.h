@@ -12,7 +12,11 @@ public:
 	//!
 	static void PrintField(const app::Field &field);
 	//!
-	static void PrintScore(const app::Score& score);
+	static void PrintScore(const app::Score &score);
+	//!
+	static void PrintLose(const std::string &reason, const app::Score &score);
+	//!
+	static void PrintSuggestNewGame();
 };
 
 }// namespace utils

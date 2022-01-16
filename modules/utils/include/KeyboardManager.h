@@ -9,11 +9,21 @@ namespace utils
 
 class KeyboardManager
 {
+	//
+	//! Public Interface
+	//
 public:
 	//!
-	static app::enums::KeyboardKeys GetPressedKey();
+	app::enums::KeyboardKeys GetPressedKey();
 	//!
-	static app::enums::Directions GetDirectionFromPressedKey(const app::enums::KeyboardKeys &key);
+	app::enums::KeyboardKeys GetLastPressedKey();
+
+	//
+	//! Private fields
+	//
+private:
+	//!
+	app::enums::KeyboardKeys lastPressedKey_;
 };
 
 }// namespace utils
