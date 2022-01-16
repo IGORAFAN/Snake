@@ -105,9 +105,6 @@ void Game::Start()
 			{
 				std::cout << "STATE: GAMEINPROCESS" << std::endl;
 
-				utils::RenderManager::PrintField(field_);
-				utils::RenderManager::PrintScore(score_);
-
 				std::thread{[&]() {
 					currentPressedKey_ = keyManager_.GetPressedKey();
 					currentDirection_ = GetDirectionFromPressedKey(currentPressedKey_);
@@ -150,6 +147,9 @@ void Game::Start()
 					}).detach();
 				}
 				field_.InsertIntoMatrix(snake_);
+
+				utils::RenderManager::PrintField(field_);
+				utils::RenderManager::PrintScore(score_);
 				break;
 			}
 			case enums::GameState::FINALGAME:
