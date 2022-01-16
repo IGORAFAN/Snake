@@ -41,11 +41,10 @@ void RenderManager::PrintLevel(const app::Level &level)
 	std::cout << "Level: " << level.GetCuurentLevelOfGame() << std::endl;
 }
 
-void RenderManager::PrintLose(const std::string &reason, const app::Score &score)
+void RenderManager::PrintLose(const std::string &reason)
 {
 	std::cout << "YOU LOSE!" << std::endl;
 	std::cout << "Reason: " << reason << std::endl;
-	utils::RenderManager::PrintScore(score);
 }
 
 void RenderManager::PrintSuggestNewGame()

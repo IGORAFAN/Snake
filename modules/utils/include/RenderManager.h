@@ -17,7 +17,7 @@ public:
 	//!
 	static void PrintLevel(const app::Level &level);
 	//!
-	static void PrintLose(const std::string &reason, const app::Score &score);
+	static void PrintLose(const std::string &reason);
 	//!
 	static void PrintSuggestNewGame();
 	//!

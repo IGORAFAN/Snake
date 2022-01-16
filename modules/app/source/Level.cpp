@@ -8,10 +8,14 @@ Level::Level() : currentLevelOfGame_(1), currentSpeedOfGame_(constants::MinGameS
 
 void Level::CalculateCurrentLevel(const app::Score &score)
 {
-	if (((score.GetScore() % 10) == 0) && (score.GetScore() != 0)) { ++currentLevelOfGame_; }
+	if (((score.GetScore() % 10) == 0) && (score.GetScore() != 0))
+	{
+		++currentLevelOfGame_;
+		CalculateCurrentSpeed();
+	}
 }
 
-void Level::CalculateCurrentLevel()
+void Level::CalculateCurrentSpeed()
 {
 	currentSpeedOfGame_ = currentLevelOfGame_ * 4;
 	if (currentSpeedOfGame_ >= constants::MaxGameSpeed) { currentSpeedOfGame_ = constants::MaxGameSpeed; }

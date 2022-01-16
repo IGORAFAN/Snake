@@ -27,7 +27,7 @@ public:
 	//
 private:
 	//!
-	void CalculateCurrentLevel();
+	void CalculateCurrentSpeed();
 
 	//
 	// Private members
