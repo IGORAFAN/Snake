@@ -1,16 +1,6 @@
 #include "../include/Field.h"
-#include "../include/Constants.h"
-#include "../include/Snake.h"
-#include "../include/Wall.h"
 
-#include <cstdint>
-#include <iostream>
 #include <memory>
-#include <queue>
-#include <stdexcept>
-
-#include "../../utils/include/RandomGenerator.h"
-#include "../../utils/include/Types.h"
 
 namespace app
 {

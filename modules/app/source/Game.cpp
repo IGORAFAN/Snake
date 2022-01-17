@@ -1,13 +1,10 @@
 #include "../include/Game.h"
-#include "../include/Enums.h"
 
-#include <atomic>
 #include <condition_variable>
 #include <iostream>
 #include <thread>
 
 #include "../../utils/include/Convertor.h"
-#include "../../utils/include/KeyboardManager.h"
 #include "../../utils/include/RenderManager.h"
 
 namespace app
@@ -45,36 +42,59 @@ void Game::GenerateNewGame()
 {
 	std::thread{[&]() {
 		field_.ClearMatrix();
-		mutex_.lock();
-		while (field_.CheckCollision(wall_) != enums::CollisionWith::NONE) { wall_.MakeRandomSpawn(); }
+		mutexForField_.lock();
+		while (field_.CheckCollision(wall_) != enums::CollisionWith::NONE)
+		{
+			mutexForField_.unlock();
+			field_.ClearMatrix();
+			wall_.MakeRandomSpawn();
+			mutexForField_.lock();
+		}
 		field_.InsertIntoMatrix(wall_);
-		mutex_.unlock();
+		mutexForField_.unlock();
 	}}.detach();
 
 	std::thread{[&]() {
 		wall_.ClearMatrix();
-		mutex_.lock();
+		mutexForField_.lock();
 		wall_.MakeRandomSpawn();
-		while (field_.CheckCollision(wall_) != enums::CollisionWith::NONE) { wall_.MakeRandomSpawn(); }
+		while (field_.CheckCollision(wall_) != enums::CollisionWith::NONE)
+		{
+			mutexForField_.unlock();
+			wall_.ClearMatrix();
+			wall_.MakeRandomSpawn();
+			mutexForField_.lock();
+		}
 		field_.InsertIntoMatrix(wall_);
-		mutex_.unlock();
+		mutexForField_.unlock();
 	}}.detach();
 
 	std::thread([&]() {
-		mutex_.lock();
+		mutexForField_.lock();
 		food_.MakeRandomSpawn();
-		while (field_.CheckCollision(food_) != enums::CollisionWith::NONE) { food_.MakeRandomSpawn(); }
+		while (field_.CheckCollision(food_) != enums::CollisionWith::NONE)
+		{
+			mutexForField_.unlock();
+			food_.MakeRandomSpawn();
+			mutexForField_.lock();
+		}
 		field_.InsertIntoMatrix(food_);
-		mutex_.unlock();
+		mutexForField_.unlock();
 	}).detach();
 
 	std::thread{[&]() {
 		snake_.ClearElementsOfSnake();
-		mutex_.lock();
+		mutexForField_.lock();
 		snake_.MakeRandomSpawn();
-		while (field_.CheckCollision(snake_) != enums::CollisionWith::NONE) { snake_.MakeRandomSpawn(); }
+		while (field_.CheckCollision(snake_) != enums::CollisionWith::NONE)
+		{
+			mutexForField_.unlock();
+			snake_.ClearElementsOfSnake();
+			snake_.MakeRandomSpawn();
+			mutexForField_.lock();
+		}
 		field_.InsertIntoMatrix(snake_);
-		mutex_.unlock();
+		mutexForField_.unlock();
 	}}.detach();
 }
 
@@ -90,6 +110,7 @@ void Game::Start()
 			case enums::GameState::PAUSEGAME:
 			{
 				utils::RenderManager::PrintMessage(utils::Convertor::GetStateOfGameAsStr(currentStateOfGame_));
+				mutexForField_.lock();
 				utils::RenderManager::PrintField(field_);
 				utils::RenderManager::PrintScore(score_);
 				utils::RenderManager::PrintLevel(level_);
@@ -105,14 +126,15 @@ void Game::Start()
 					Game::Stop();
 					break;
 				}
+				mutexForField_.unlock();
 				break;
 			}
 			case enums::GameState::FINALGAME:
 			{
 				utils::RenderManager::PrintMessage(utils::Convertor::GetStateOfGameAsStr(currentStateOfGame_));
-
+				mutexForField_.lock();
 				utils::RenderManager::PrintField(field_);
-				utils::RenderManager::PrintLose(reasonOfFail);
+				utils::RenderManager::PrintLose(reasonOfFail_);
 				utils::RenderManager::PrintScore(score_);
 				utils::RenderManager::PrintLevel(level_);
 				utils::RenderManager::PrintSuggestNewGame();
@@ -128,22 +150,23 @@ void Game::Start()
 					Game::Stop();
 					break;
 				}
+				mutexForField_.unlock();
 				break;
 			}
 			case enums::GameState::STARTGAME:
 			{
 				GenerateNewGame();
 				std::this_thread::sleep_for(std::chrono::milliseconds(500));
-				mutex_.lock();
-				for (int sec = constants::WaitSecBeforeGameIsStart; sec > 0; --sec)
+				for (auto sec = constants::WaitSecBeforeGameIsStart; sec != 0; --sec)
 				{
+					mutexForField_.lock();
 					utils::RenderManager::PrintMessage(utils::Convertor::GetStateOfGameAsStr(currentStateOfGame_));
 					utils::RenderManager::PrintWaiting(sec);
 					utils::RenderManager::PrintField(field_);
+					mutexForField_.unlock();
 					std::this_thread::sleep_for(std::chrono::seconds(1));
 					std::system("clear");
 				}
-				mutex_.unlock();
 
 				currentStateOfGame_ = app::enums::GameState::GAMEINPROCESS;
 				break;
@@ -151,9 +174,11 @@ void Game::Start()
 			case enums::GameState::GAMEINPROCESS:
 			{
 				utils::RenderManager::PrintMessage(utils::Convertor::GetStateOfGameAsStr(currentStateOfGame_));
+				mutexForField_.lock();
 				utils::RenderManager::PrintField(field_);
 				utils::RenderManager::PrintScore(score_);
 				utils::RenderManager::PrintLevel(level_);
+				mutexForField_.unlock();
 
 				std::thread{[&]() {
 					currentPressedKey_ = keyManager_.GetPressedKey();
@@ -169,18 +194,19 @@ void Game::Start()
 					Game::Stop();
 					break;
 				}
-
 				snake_.MakeMove(currentDirection_);
+				mutexForField_.lock();
 				const auto collisionResult = field_.CheckCollision(snake_);
+				mutexForField_.unlock();
 				if (collisionResult == enums::CollisionWith::WALL)
 				{
-					reasonOfFail = "Collision with the Wall...";
+					reasonOfFail_ = "Collision with the Wall...";
 					currentStateOfGame_ = enums::GameState::FINALGAME;
 					break;
 				}
 				if (collisionResult == enums::CollisionWith::SNAKE)
 				{
-					reasonOfFail = "Collision with the Snake...";
+					reasonOfFail_ = "Collision with the Snake...";
 					currentStateOfGame_ = enums::GameState::FINALGAME;
 					break;
 				}
@@ -188,17 +214,29 @@ void Game::Start()
 				{
 					std::thread([&]() {
 						food_.MakeRandomSpawn();
-						mutex_.lock();
-						while (field_.CheckCollision(food_) != enums::CollisionWith::NONE) { food_.MakeRandomSpawn(); }
+						mutexForField_.lock();
+						while (field_.CheckCollision(food_) != enums::CollisionWith::NONE)
+						{
+							mutexForField_.unlock();
+							food_.MakeRandomSpawn();
+							mutexForField_.lock();
+						}
 						field_.InsertIntoMatrix(food_);
-						mutex_.unlock();
+						mutexForField_.unlock();
 					}).detach();
-					std::thread{[&]() { score_.IncrementScore(); }}.detach();
 					std::thread{[&]() { snake_.GrowUpNow(); }}.detach();
-					level_.CalculateCurrentLevel(score_);
+					std::thread{[&]() {
+						std::lock_guard<std::mutex> lock(mutexForScore_);
+						score_.IncrementScore();
+					}}.detach();
+					std::thread{[&]() {
+						std::lock_guard<std::mutex> lock(mutexForScore_);
+						level_.CalculateCurrentLevel(score_);
+					}}.detach();
 				}
+				mutexForField_.lock();
 				field_.InsertIntoMatrix(snake_);
-
+				mutexForField_.unlock();
 				break;
 			}
 		}

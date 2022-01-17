@@ -4,7 +4,6 @@
 
 #include <cstdio>
 #include <iostream>
-#include <istream>
 
 namespace utils
 {
@@ -45,10 +44,17 @@ app::enums::KeyboardKeys KeyboardManager::GetPressedKey()
 
 app::enums::KeyboardKeys KeyboardManager::GetPressedKeyV2()
 {
+	std::lock_guard<std::mutex> lock{mutex_};
 	app::enums::KeyboardKeys temp;
 	const auto inputSignal = getchar();
 	switch (inputSignal)
 	{
+		case (static_cast<int>('y')):
+			temp = app::enums::KeyboardKeys::Y;
+			break;
+		case (static_cast<int>('n')):
+			temp = app::enums::KeyboardKeys::N;
+			break;
 		case (static_cast<int>('w')):
 			temp = app::enums::KeyboardKeys::W;
 			break;
@@ -63,12 +69,6 @@ app::enums::KeyboardKeys KeyboardManager::GetPressedKeyV2()
 			break;
 		case (static_cast<int>('p')):
 			temp = app::enums::KeyboardKeys::P;
-			break;
-		case (static_cast<int>('n')):
-			temp = app::enums::KeyboardKeys::N;
-			break;
-		case (static_cast<int>('y')):
-			temp = app::enums::KeyboardKeys::Y;
 			break;
 		default:
 			return lastPressedKey_;

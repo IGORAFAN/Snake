@@ -1,10 +1,6 @@
 #include "../include/Snake.h"
-#include "../include/Enums.h"
 
 #include "../../utils/include/RandomGenerator.h"
-#include "../../utils/include/Types.h"
-
-#include <stdint.h>
 
 namespace app
 {

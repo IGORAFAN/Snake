@@ -45,9 +45,11 @@ private:
 	//!
 	bool isGameRunning_;
 	//!
-	std::string reasonOfFail;
-	//!
-	std::mutex mutex_;
+	std::string reasonOfFail_;
+	//! Synchronization to share the resource of class "Field" between threads.
+	std::mutex mutexForField_;
+	//! Synchronization to share the resource of class "Score" between threads.
+	std::mutex mutexForScore_;
 	//!
 	Field field_;
 	//!
