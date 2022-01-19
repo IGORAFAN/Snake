@@ -7,18 +7,20 @@ namespace app
 
 Snake::Snake() : isGrowUpNow_(false), lastDirection_(enums::Directions::UP)
 {
-	ClearElementsOfSnake();
+	ClearMatrix();
 }
 
-void Snake::ClearElementsOfSnake()
+Snake::~Snake() noexcept {}
+
+void Snake::ClearMatrix()
 {
 	while (!snakeElements_.empty()) { snakeElements_.pop(); }
 }
 
 void Snake::MakeRandomSpawn()
 {
-	const auto headOfSnake =
-			utils::RandomGenerator::GetRandomCoordinates(2, constants::GameSize - 2);
+	const auto headOfSnake = utils::RandomGenerator::GetRandomCoordinates(
+			2, constants::GameSize - 2);
 	auto tailOfSnake = headOfSnake;
 	tailOfSnake.Y += 1;
 	snakeElements_.emplace(tailOfSnake);
@@ -59,12 +61,12 @@ void Snake::MakeMove(const enums::Directions &direction)
 		newPositionOfHeadOfSnake.Y += shiftY;
 		newPositionOfHeadOfSnake.X += shiftX + constants::GameSize;
 	}
-	else if (newPositionOfHeadOfSnake.Y + shiftY > constants::GameSize - 1)
+	else if (newPositionOfHeadOfSnake.Y + shiftY > (constants::GameSize - 1))
 	{
 		newPositionOfHeadOfSnake.Y += shiftY - constants::GameSize;
 		newPositionOfHeadOfSnake.X += shiftX;
 	}
-	else if (newPositionOfHeadOfSnake.X + shiftX > constants::GameSize - 1)
+	else if (newPositionOfHeadOfSnake.X + shiftX > (constants::GameSize - 1))
 	{
 		newPositionOfHeadOfSnake.Y += shiftY;
 		newPositionOfHeadOfSnake.X += shiftX - constants::GameSize;
@@ -82,18 +84,21 @@ void Snake::MakeMove(const enums::Directions &direction)
 	isGrowUpNow_ = false;
 }
 
-void Snake::GrowUpNow()
-{
-	isGrowUpNow_ = true;
-}
+void Snake::GrowUpNow() { isGrowUpNow_ = true; }
 
-const enums::Directions &Snake::GetLastDirections() const { return lastDirection_; }
+const enums::Directions &Snake::GetLastDirections() const
+{
+	return lastDirection_;
+}
 
 const std::queue<utils::types::Coordinates> &Snake::GetElementsOfSnake() const
 {
 	return snakeElements_;
 }
 
-const utils::types::Coordinates &Snake::GetHeadOfSnake() const { return currentHeadOfSnake_; }
+const utils::types::Coordinates &Snake::GetHeadOfSnake() const
+{
+	return currentHeadOfSnake_;
+}
 
 }// namespace app

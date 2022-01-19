@@ -2,6 +2,7 @@
 
 #include "../../utils/include/Types.h"
 
+#include "IObject.h"
 #include "Constants.h"
 #include "Enums.h"
 
@@ -11,7 +12,7 @@
 namespace app
 {
 
-class Wall
+class Wall : public IObject
 {
 	//
 	// Public interface
@@ -20,9 +21,11 @@ public:
 	//! Constructor
 	Wall();
 	//!
-	void ClearMatrix();
+	~Wall() noexcept override;
 	//!
-	void MakeRandomSpawn();
+	void ClearMatrix() override;
+	//!
+	void MakeRandomSpawn() override;
 	//!
 	const std::array<std::array<enums::Objects, constants::GameSize>, constants::GameSize> &
 	GetMatrixOfWall() const;

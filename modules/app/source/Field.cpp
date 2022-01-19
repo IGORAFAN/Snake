@@ -7,6 +7,8 @@ namespace app
 
 Field::Field() { ClearMatrix(); }
 
+Field::~Field() {}
+
 void Field::ClearMatrix()
 {
 	utils::types::Coordinates pos;
@@ -19,8 +21,9 @@ void Field::ClearMatrix()
 	}
 }
 
-const std::array<std::array<enums::Objects, constants::GameSize>, constants::GameSize> &
-Field::GetMatrixOfFields() const
+void Field::MakeRandomSpawn() {}
+
+const std::array<std::array<enums::Objects, constants::GameSize>, constants::GameSize> &Field::GetMatrixOfFields() const
 {
 	return matrixOfField_;
 }

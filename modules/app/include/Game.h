@@ -48,8 +48,6 @@ private:
 	std::string reasonOfFail_;
 	//! Synchronization to share the resource of class "Field" between threads.
 	std::mutex mutexForField_;
-	//! Synchronization to share the resource of class "Score" between threads.
-	std::mutex mutexForScore_;
 	//!
 	Field field_;
 	//!

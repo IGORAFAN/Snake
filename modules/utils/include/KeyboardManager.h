@@ -15,9 +15,9 @@ class KeyboardManager
 	//
 public:
 	//!
-	app::enums::KeyboardKeys GetPressedKey();
+	app::enums::KeyboardKeys GetPressedKeyLinuxPlatform();
 	//!
-	app::enums::KeyboardKeys GetPressedKeyV2();
+	app::enums::KeyboardKeys GetPressedKeyWindowsPlatform();
 	//!
 	app::enums::KeyboardKeys GetLastPressedKey();
 

@@ -9,6 +9,8 @@ namespace app
 
 Wall::Wall() { ClearMatrix(); }
 
+Wall::~Wall() {}
+
 void Wall::ClearMatrix()
 {
 	utils::types::Coordinates pos;
@@ -28,10 +30,7 @@ void Wall::MakeRandomSpawn()
 
 	if ((point.Y <= point.X) && (point.Y <= (constants::GameSize / 2) - 1))
 	{
-		for (size_t iter = point.Y; iter != 0; --iter)
-		{
-			matrixOfWall_.at(iter).at(point.X) = enums::Objects::WALL;
-		}
+		for (size_t iter = point.Y; iter != 0; --iter) { matrixOfWall_.at(iter).at(point.X) = enums::Objects::WALL; }
 	}
 	if ((point.X <= point.Y) && (point.X <= (constants::GameSize / 2) - 1))
 	{

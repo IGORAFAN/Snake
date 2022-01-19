@@ -4,6 +4,7 @@
 
 #include "Constants.h"
 #include "Enums.h"
+#include "IObject.h"
 
 #include <memory>
 #include <queue>
@@ -11,7 +12,7 @@
 namespace app
 {
 
-class Snake final
+class Snake : public IObject
 {
 	//
 	//! Public interface
@@ -20,15 +21,17 @@ public:
 	//! Constructor
 	Snake();
 	//!
-	void ClearElementsOfSnake();
+	~Snake() noexcept override;
 	//!
-	void MakeRandomSpawn();
+	void ClearMatrix() final override;
+	//!
+	void MakeRandomSpawn() final override;
 	//!
 	void MakeMove(const enums::Directions &direction);
 	//!
 	void GrowUpNow();
 	//!
-	const enums::Directions&GetLastDirections() const;
+	const enums::Directions &GetLastDirections() const;
 	//!
 	const std::queue<utils::types::Coordinates> &GetElementsOfSnake() const;
 	//!

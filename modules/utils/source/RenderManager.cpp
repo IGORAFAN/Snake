@@ -29,7 +29,7 @@ void RenderManager::PrintField(const app::Field &field)
 					std::cout << app::constants::WallSymbol;
 					break;
 			}
-			if (pos.X == app::constants::GameSize - 1) std::cout << std::endl;
+			if (pos.X == (app::constants::GameSize - 1)) std::cout << std::endl;
 		}
 	}
 }

@@ -21,16 +21,20 @@ app::enums::Directions Game::GetDirectionFromPressedKey(const app::enums::Keyboa
 	switch (key)
 	{
 		case app::enums::KeyboardKeys::W:
-			if (currentDirection_ != app::enums::Directions::DOWN) currentDirection_ = app::enums::Directions::UP;
+			if (currentDirection_ != app::enums::Directions::DOWN)
+				currentDirection_ = app::enums::Directions::UP;
 			break;
 		case app::enums::KeyboardKeys::S:
-			if (currentDirection_ != app::enums::Directions::UP) currentDirection_ = app::enums::Directions::DOWN;
+			if (currentDirection_ != app::enums::Directions::UP)
+				currentDirection_ = app::enums::Directions::DOWN;
 			break;
 		case app::enums::KeyboardKeys::D:
-			if (currentDirection_ != app::enums::Directions::LEFT) currentDirection_ = app::enums::Directions::RIGHT;
+			if (currentDirection_ != app::enums::Directions::LEFT)
+				currentDirection_ = app::enums::Directions::RIGHT;
 			break;
 		case app::enums::KeyboardKeys::A:
-			if (currentDirection_ != app::enums::Directions::RIGHT) currentDirection_ = app::enums::Directions::LEFT;
+			if (currentDirection_ != app::enums::Directions::RIGHT)
+				currentDirection_ = app::enums::Directions::LEFT;
 			break;
 		default:
 			return currentDirection_;
@@ -83,13 +87,13 @@ void Game::GenerateNewGame()
 	}).detach();
 
 	std::thread{[&]() {
-		snake_.ClearElementsOfSnake();
+		snake_.ClearMatrix();
 		mutexForField_.lock();
 		snake_.MakeRandomSpawn();
 		while (field_.CheckCollision(snake_) != enums::CollisionWith::NONE)
 		{
 			mutexForField_.unlock();
-			snake_.ClearElementsOfSnake();
+			snake_.ClearMatrix();
 			snake_.MakeRandomSpawn();
 			mutexForField_.lock();
 		}
@@ -107,52 +111,6 @@ void Game::Start()
 	{
 		switch (currentStateOfGame_)
 		{
-			case enums::GameState::PAUSEGAME:
-			{
-				utils::RenderManager::PrintMessage(utils::Convertor::GetStateOfGameAsStr(currentStateOfGame_));
-				mutexForField_.lock();
-				utils::RenderManager::PrintField(field_);
-				utils::RenderManager::PrintScore(score_);
-				utils::RenderManager::PrintLevel(level_);
-				utils::RenderManager::PrintReturnToGame();
-				currentPressedKey_ = keyManager_.GetPressedKey();
-				if (currentPressedKey_ == enums::KeyboardKeys::Y)
-				{
-					currentStateOfGame_ = enums::GameState::GAMEINPROCESS;
-					break;
-				}
-				if (currentPressedKey_ == enums::KeyboardKeys::N)
-				{
-					Game::Stop();
-					break;
-				}
-				mutexForField_.unlock();
-				break;
-			}
-			case enums::GameState::FINALGAME:
-			{
-				utils::RenderManager::PrintMessage(utils::Convertor::GetStateOfGameAsStr(currentStateOfGame_));
-				mutexForField_.lock();
-				utils::RenderManager::PrintField(field_);
-				utils::RenderManager::PrintLose(reasonOfFail_);
-				utils::RenderManager::PrintScore(score_);
-				utils::RenderManager::PrintLevel(level_);
-				utils::RenderManager::PrintSuggestNewGame();
-
-				currentPressedKey_ = keyManager_.GetPressedKey();
-				if (currentPressedKey_ == enums::KeyboardKeys::Y)
-				{
-					currentStateOfGame_ = enums::GameState::STARTGAME;
-					break;
-				}
-				if (currentPressedKey_ == enums::KeyboardKeys::N)
-				{
-					Game::Stop();
-					break;
-				}
-				mutexForField_.unlock();
-				break;
-			}
 			case enums::GameState::STARTGAME:
 			{
 				GenerateNewGame();
@@ -160,7 +118,8 @@ void Game::Start()
 				for (auto sec = constants::WaitSecBeforeGameIsStart; sec != 0; --sec)
 				{
 					mutexForField_.lock();
-					utils::RenderManager::PrintMessage(utils::Convertor::GetStateOfGameAsStr(currentStateOfGame_));
+					utils::RenderManager::PrintMessage(
+							utils::Convertor::GetStateOfGameAsStr(currentStateOfGame_));
 					utils::RenderManager::PrintWaiting(sec);
 					utils::RenderManager::PrintField(field_);
 					mutexForField_.unlock();
@@ -173,7 +132,8 @@ void Game::Start()
 			}
 			case enums::GameState::GAMEINPROCESS:
 			{
-				utils::RenderManager::PrintMessage(utils::Convertor::GetStateOfGameAsStr(currentStateOfGame_));
+				utils::RenderManager::PrintMessage(
+						utils::Convertor::GetStateOfGameAsStr(currentStateOfGame_));
 				mutexForField_.lock();
 				utils::RenderManager::PrintField(field_);
 				utils::RenderManager::PrintScore(score_);
@@ -181,7 +141,7 @@ void Game::Start()
 				mutexForField_.unlock();
 
 				std::thread{[&]() {
-					currentPressedKey_ = keyManager_.GetPressedKey();
+					currentPressedKey_ = keyManager_.GetPressedKeyLinuxPlatform();
 					currentDirection_ = GetDirectionFromPressedKey(currentPressedKey_);
 				}}.detach();
 				if (currentPressedKey_ == enums::KeyboardKeys::P)
@@ -226,11 +186,7 @@ void Game::Start()
 					}).detach();
 					std::thread{[&]() { snake_.GrowUpNow(); }}.detach();
 					std::thread{[&]() {
-						std::lock_guard<std::mutex> lock(mutexForScore_);
 						score_.IncrementScore();
-					}}.detach();
-					std::thread{[&]() {
-						std::lock_guard<std::mutex> lock(mutexForScore_);
 						level_.CalculateCurrentLevel(score_);
 					}}.detach();
 				}
@@ -239,9 +195,58 @@ void Game::Start()
 				mutexForField_.unlock();
 				break;
 			}
+			case enums::GameState::PAUSEGAME:
+			{
+				utils::RenderManager::PrintMessage(
+						utils::Convertor::GetStateOfGameAsStr(currentStateOfGame_));
+				mutexForField_.lock();
+				utils::RenderManager::PrintField(field_);
+				utils::RenderManager::PrintScore(score_);
+				utils::RenderManager::PrintLevel(level_);
+				utils::RenderManager::PrintReturnToGame();
+				currentPressedKey_ = keyManager_.GetPressedKeyLinuxPlatform();
+				if (currentPressedKey_ == enums::KeyboardKeys::Y)
+				{
+					currentStateOfGame_ = enums::GameState::GAMEINPROCESS;
+					break;
+				}
+				if (currentPressedKey_ == enums::KeyboardKeys::N)
+				{
+					Game::Stop();
+					break;
+				}
+				mutexForField_.unlock();
+				break;
+			}
+			case enums::GameState::FINALGAME:
+			{
+				utils::RenderManager::PrintMessage(
+						utils::Convertor::GetStateOfGameAsStr(currentStateOfGame_));
+				mutexForField_.lock();
+				utils::RenderManager::PrintField(field_);
+				utils::RenderManager::PrintLose(reasonOfFail_);
+				utils::RenderManager::PrintScore(score_);
+				utils::RenderManager::PrintLevel(level_);
+				utils::RenderManager::PrintSuggestNewGame();
+
+				currentPressedKey_ = keyManager_.GetPressedKeyLinuxPlatform();
+				if (currentPressedKey_ == enums::KeyboardKeys::Y)
+				{
+					currentStateOfGame_ = enums::GameState::STARTGAME;
+					break;
+				}
+				if (currentPressedKey_ == enums::KeyboardKeys::N)
+				{
+					Game::Stop();
+					break;
+				}
+				mutexForField_.unlock();
+				break;
+			}
 		}
 
-		std::this_thread::sleep_for(std::chrono::milliseconds(1000 / level_.GetCurrentSpeedOfGame()));
+		std::this_thread::sleep_for(
+				std::chrono::milliseconds(1000 / level_.GetCurrentSpeedOfGame()));
 		std::system("clear");
 	}
 }

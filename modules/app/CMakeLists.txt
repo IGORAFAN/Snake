@@ -10,6 +10,7 @@ set(${PROJECT_NAME}_HEADERS
         include/Field.h
         include/Food.h
         include/Game.h
+        include/IObject.h
         include/Level.h
         include/Snake.h
         include/Score.h

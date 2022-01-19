@@ -1,17 +1,17 @@
-
 #pragma once
 
 #include "../../utils/include/Types.h"
 
 #include "Constants.h"
 #include "Food.h"
+#include "IObject.h"
 #include "Snake.h"
 #include "Wall.h"
 
 namespace app
 {
 
-class Field final
+class Field : public IObject
 {
 	//
 	//! Public interface
@@ -20,10 +20,13 @@ public:
 	//! Constructor
 	Field();
 	//!
-	void ClearMatrix();
+	~Field() noexcept override;
 	//!
-	const std::array<std::array<enums::Objects, constants::GameSize>, constants::GameSize> &
-	GetMatrixOfFields() const;
+	void ClearMatrix() override;
+	//!
+	void MakeRandomSpawn() override;
+	//!
+	const std::array<std::array<enums::Objects, constants::GameSize>, constants::GameSize> &GetMatrixOfFields() const;
 	//!
 	void InsertIntoMatrix(const Food &food);
 	//!

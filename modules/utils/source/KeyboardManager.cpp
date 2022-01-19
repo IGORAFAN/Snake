@@ -8,7 +8,7 @@
 namespace utils
 {
 
-app::enums::KeyboardKeys KeyboardManager::GetPressedKey()
+app::enums::KeyboardKeys KeyboardManager::GetPressedKeyLinuxPlatform()
 {
 	std::lock_guard<std::mutex> lock{mutex_};
 	const auto inputSignal = std::cin.get();
