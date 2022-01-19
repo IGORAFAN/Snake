@@ -3,80 +3,65 @@
 #include "../include/KeyboardManager.h"
 
 #include <cstdio>
-#include <iostream>
+
+#if (defined(_WIN32) || defined(_WIN64))
+#include <Windows.h>
+#include <conio.h>
+#elif (defined(LINUX) || defined(__linux__))
+#include <termios.h>
+#include <unistd.h>
+#endif
 
 namespace utils
 {
 
-app::enums::KeyboardKeys KeyboardManager::GetPressedKeyLinuxPlatform()
+app::enums::KeyboardKeys KeyboardManager::GetPressedKey()
+{
+
+#if (defined(LINUX) || defined(__linux__))
+	std::lock_guard<std::mutex> lock{mutex_};
+	struct termios oldt, newt;
+	int inputSignal;
+	tcgetattr(STDIN_FILENO, &oldt);
+	newt = oldt;
+	newt.c_lflag &= ~(ICANON | ECHO);
+	tcsetattr(STDIN_FILENO, TCSANOW, &newt);
+	inputSignal = getchar();
+	tcsetattr(STDIN_FILENO, TCSANOW, &oldt);
+#elif (defined(_WIN32) || defined(_WIN64))
+	if (_kbhit()) { const auto inputSignal = _getch(); }
+#endif
+	return DefinedKeys(inputSignal);
+}
+
+app::enums::KeyboardKeys KeyboardManager::GetPressedKeyViaConsole()
 {
 	std::lock_guard<std::mutex> lock{mutex_};
-	const auto inputSignal = std::cin.get();
-	std::cin.clear();
-	switch (inputSignal)
+	const auto inputSignal = getchar();
+	return DefinedKeys(inputSignal);
+}
+
+app::enums::KeyboardKeys KeyboardManager::DefinedKeys(int keyCode)
+{
+	switch (keyCode)
 	{
-		case 'w':
-			lastPressedKey_ = app::enums::KeyboardKeys::W;
-			break;
-		case 'a':
-			lastPressedKey_ = app::enums::KeyboardKeys::A;
-			break;
-		case 's':
-			lastPressedKey_ = app::enums::KeyboardKeys::S;
-			break;
-		case 'd':
-			lastPressedKey_ = app::enums::KeyboardKeys::D;
-			break;
-		case 'p':
-			lastPressedKey_ = app::enums::KeyboardKeys::P;
-			break;
-		case 'n':
-			lastPressedKey_ = app::enums::KeyboardKeys::N;
-			break;
-		case 'y':
-			lastPressedKey_ = app::enums::KeyboardKeys::Y;
-			break;
+		case (static_cast<int>('w')):
+			return app::enums::KeyboardKeys::W;
+		case (static_cast<int>('a')):
+			return app::enums::KeyboardKeys::A;
+		case (static_cast<int>('s')):
+			return app::enums::KeyboardKeys::S;
+		case (static_cast<int>('d')):
+			return app::enums::KeyboardKeys::D;
+		case (static_cast<int>('p')):
+			return app::enums::KeyboardKeys::P;
+		case (static_cast<int>('n')):
+			return app::enums::KeyboardKeys::N;
+		case (static_cast<int>('y')):
+			return app::enums::KeyboardKeys::Y;
 		default:
 			return app::enums::KeyboardKeys::NONE;
 	}
-	return lastPressedKey_;
 }
-
-app::enums::KeyboardKeys KeyboardManager::GetPressedKeyV2()
-{
-	std::lock_guard<std::mutex> lock{mutex_};
-	app::enums::KeyboardKeys temp;
-	const auto inputSignal = getchar();
-	switch (inputSignal)
-	{
-		case (static_cast<int>('y')):
-			temp = app::enums::KeyboardKeys::Y;
-			break;
-		case (static_cast<int>('n')):
-			temp = app::enums::KeyboardKeys::N;
-			break;
-		case (static_cast<int>('w')):
-			temp = app::enums::KeyboardKeys::W;
-			break;
-		case (static_cast<int>('a')):
-			temp = app::enums::KeyboardKeys::A;
-			break;
-		case (static_cast<int>('s')):
-			temp = app::enums::KeyboardKeys::S;
-			break;
-		case (static_cast<int>('d')):
-			temp = app::enums::KeyboardKeys::D;
-			break;
-		case (static_cast<int>('p')):
-			temp = app::enums::KeyboardKeys::P;
-			break;
-		default:
-			return lastPressedKey_;
-	}
-	lastPressedKey_ = temp;
-	return temp;
-}
-
-app::enums::KeyboardKeys KeyboardManager::GetLastPressedKey() { return lastPressedKey_; }
 
 }// namespace utils

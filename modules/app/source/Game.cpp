@@ -141,7 +141,7 @@ void Game::Start()
 				mutexForField_.unlock();
 
 				std::thread{[&]() {
-					currentPressedKey_ = keyManager_.GetPressedKeyLinuxPlatform();
+					currentPressedKey_ = keyManager_.GetPressedKey();
 					currentDirection_ = GetDirectionFromPressedKey(currentPressedKey_);
 				}}.detach();
 				if (currentPressedKey_ == enums::KeyboardKeys::P)
@@ -204,7 +204,8 @@ void Game::Start()
 				utils::RenderManager::PrintScore(score_);
 				utils::RenderManager::PrintLevel(level_);
 				utils::RenderManager::PrintReturnToGame();
-				currentPressedKey_ = keyManager_.GetPressedKeyLinuxPlatform();
+
+				currentPressedKey_ = keyManager_.GetPressedKey();
 				if (currentPressedKey_ == enums::KeyboardKeys::Y)
 				{
 					currentStateOfGame_ = enums::GameState::GAMEINPROCESS;
@@ -229,7 +230,7 @@ void Game::Start()
 				utils::RenderManager::PrintLevel(level_);
 				utils::RenderManager::PrintSuggestNewGame();
 
-				currentPressedKey_ = keyManager_.GetPressedKeyLinuxPlatform();
+				currentPressedKey_ = keyManager_.GetPressedKey();
 				if (currentPressedKey_ == enums::KeyboardKeys::Y)
 				{
 					currentStateOfGame_ = enums::GameState::STARTGAME;

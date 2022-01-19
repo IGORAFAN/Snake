@@ -15,19 +15,23 @@ class KeyboardManager
 	//
 public:
 	//!
-	app::enums::KeyboardKeys GetPressedKeyLinuxPlatform();
+	app::enums::KeyboardKeys GetPressedKey();
 	//!
-	app::enums::KeyboardKeys GetPressedKeyWindowsPlatform();
-	//!
-	app::enums::KeyboardKeys GetLastPressedKey();
+	app::enums::KeyboardKeys GetPressedKeyViaConsole();
+
+	//
+	//! Private methods
+	//
+private:
+	static app::enums::KeyboardKeys DefinedKeys(int keyCode);
 
 	//
 	//! Private fields
 	//
 private:
-	std::mutex mutex_;
 	//!
-	app::enums::KeyboardKeys lastPressedKey_;
+	std::mutex mutex_;
+
 };
 
 }// namespace utils
