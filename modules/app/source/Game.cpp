@@ -199,7 +199,6 @@ void Game::Start()
 			{
 				utils::RenderManager::PrintMessage(
 						utils::Convertor::GetStateOfGameAsStr(currentStateOfGame_));
-				mutexForField_.lock();
 				utils::RenderManager::PrintField(field_);
 				utils::RenderManager::PrintScore(score_);
 				utils::RenderManager::PrintLevel(level_);
@@ -216,14 +215,12 @@ void Game::Start()
 					Game::Stop();
 					break;
 				}
-				mutexForField_.unlock();
 				break;
 			}
 			case enums::GameState::FINALGAME:
 			{
 				utils::RenderManager::PrintMessage(
 						utils::Convertor::GetStateOfGameAsStr(currentStateOfGame_));
-				mutexForField_.lock();
 				utils::RenderManager::PrintField(field_);
 				utils::RenderManager::PrintLose(reasonOfFail_);
 				utils::RenderManager::PrintScore(score_);
@@ -241,7 +238,6 @@ void Game::Start()
 					Game::Stop();
 					break;
 				}
-				mutexForField_.unlock();
 				break;
 			}
 		}
