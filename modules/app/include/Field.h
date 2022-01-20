@@ -41,6 +41,9 @@ public:
 	enums::CollisionWith CheckCollision(const Wall &wall);
 
 private:
+	static enums::CollisionWith CheckCollision(enums::Objects obj);
+
+private:
 	//!
 	std::array<std::array<enums::Objects, constants::GameSize>, constants::GameSize> matrixOfField_;
 };

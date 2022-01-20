@@ -23,7 +23,8 @@ void Field::ClearMatrix()
 
 void Field::MakeRandomSpawn() {}
 
-const std::array<std::array<enums::Objects, constants::GameSize>, constants::GameSize> &Field::GetMatrixOfFields() const
+const std::array<std::array<enums::Objects, constants::GameSize>, constants::GameSize> &
+Field::GetMatrixOfFields() const
 {
 	return matrixOfField_;
 }
@@ -77,39 +78,13 @@ void Field::InsertIntoMatrix(const Wall &wall)
 enums::CollisionWith Field::CheckCollision(const Snake &snake)
 {
 	const auto headOfSnakePosition = snake.GetHeadOfSnake();
-	switch (matrixOfField_.at(headOfSnakePosition.Y).at(headOfSnakePosition.X))
-	{
-		case app::enums::Objects::FOOD:
-			return app::enums::CollisionWith::FOOD;
-		case app::enums::Objects::WALL:
-			return app::enums::CollisionWith::WALL;
-		case app::enums::Objects::SNAKE:
-			return app::enums::CollisionWith::SNAKE;
-		case app::enums::Objects::NONE:
-			break;
-		default:
-			break;
-	}
-	return app::enums::CollisionWith::NONE;
+	return CheckCollision(matrixOfField_.at(headOfSnakePosition.Y).at(headOfSnakePosition.X));
 }
 
 enums::CollisionWith Field::CheckCollision(const Food &food)
 {
 	const auto foodPosition = food.GetPositionOfFood();
-	switch (matrixOfField_.at(foodPosition.Y).at(foodPosition.X))
-	{
-		case app::enums::Objects::FOOD:
-			return app::enums::CollisionWith::FOOD;
-		case app::enums::Objects::WALL:
-			return app::enums::CollisionWith::WALL;
-		case app::enums::Objects::SNAKE:
-			return app::enums::CollisionWith::SNAKE;
-		case app::enums::Objects::NONE:
-			break;
-		default:
-			break;
-	}
-	return enums::CollisionWith::NONE;
+	return CheckCollision(matrixOfField_.at(foodPosition.Y).at(foodPosition.X));
 }
 
 enums::CollisionWith Field::CheckCollision(const Wall &wall)
@@ -122,21 +97,27 @@ enums::CollisionWith Field::CheckCollision(const Wall &wall)
 		{
 			if (matrixOfWall.at(pos.Y).at(pos.X) == enums::Objects::WALL)
 			{
-				switch (matrixOfField_.at(pos.Y).at(pos.X))
-				{
-					case app::enums::Objects::FOOD:
-						return app::enums::CollisionWith::FOOD;
-					case app::enums::Objects::WALL:
-						return app::enums::CollisionWith::WALL;
-					case app::enums::Objects::SNAKE:
-						return app::enums::CollisionWith::SNAKE;
-					case app::enums::Objects::NONE:
-						break;
-					default:
-						break;
-				}
+				return CheckCollision(matrixOfField_.at(pos.Y).at(pos.X));
 			}
 		}
+	}
+	return enums::CollisionWith::NONE;
+}
+
+enums::CollisionWith Field::CheckCollision(enums::Objects obj)
+{
+	switch (obj)
+	{
+		case app::enums::Objects::FOOD:
+			return app::enums::CollisionWith::FOOD;
+		case app::enums::Objects::WALL:
+			return app::enums::CollisionWith::WALL;
+		case app::enums::Objects::SNAKE:
+			return app::enums::CollisionWith::SNAKE;
+		case app::enums::Objects::NONE:
+			break;
+		default:
+			break;
 	}
 	return enums::CollisionWith::NONE;
 }

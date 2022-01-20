@@ -11,9 +11,10 @@ namespace app
 {
 
 Game::Game()
-	: isGameRunning_(false), field_(), food_(), snake_(), wall_(), score_(0), level_(),
-	  currentStateOfGame_(enums::GameState::STARTGAME), currentPressedKey_(enums::KeyboardKeys::W),
-	  currentDirection_(enums::Directions::UP), keyManager_()
+	: isGameRunning_(false), reasonOfFail_("UNKNOWN"), field_(), food_(), snake_(), wall_(),
+	  score_(0), level_(), currentStateOfGame_(enums::GameState::STARTGAME),
+	  currentPressedKey_(enums::KeyboardKeys::W), currentDirection_(enums::Directions::UP),
+	  keyManager_()
 {}
 
 app::enums::Directions Game::GetDirectionFromPressedKey(const app::enums::KeyboardKeys &key)
@@ -44,6 +45,10 @@ app::enums::Directions Game::GetDirectionFromPressedKey(const app::enums::Keyboa
 
 void Game::GenerateNewGame()
 {
+	reasonOfFail_ = "UNKNOWN";
+	score_.Set(0);
+	level_.CalculateCurrentLevel(score_);
+
 	std::thread{[&]() {
 		field_.ClearMatrix();
 		mutexForField_.lock();
