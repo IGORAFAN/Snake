@@ -17,11 +17,10 @@ namespace utils
 
 app::enums::KeyboardKeys KeyboardManager::GetPressedKey()
 {
-
+	int inputSignal = 0;
 #if (defined(LINUX) || defined(__linux__))
 	std::lock_guard<std::mutex> lock{mutex_};
 	struct termios oldt, newt;
-	int inputSignal;
 	tcgetattr(STDIN_FILENO, &oldt);
 	newt = oldt;
 	newt.c_lflag &= ~(ICANON | ECHO);
@@ -29,7 +28,7 @@ app::enums::KeyboardKeys KeyboardManager::GetPressedKey()
 	inputSignal = getchar();
 	tcsetattr(STDIN_FILENO, TCSANOW, &oldt);
 #elif (defined(_WIN32) || defined(_WIN64))
-	if (_kbhit()) { const auto inputSignal = _getch(); }
+	if (_kbhit()) { inputSignal = _getch(); }
 #endif
 	return DefinedKeys(inputSignal);
 }

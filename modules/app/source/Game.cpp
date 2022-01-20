@@ -124,7 +124,7 @@ void Game::Start()
 					utils::RenderManager::PrintField(field_);
 					mutexForField_.unlock();
 					std::this_thread::sleep_for(std::chrono::seconds(1));
-					std::system("clear");
+					utils::RenderManager::ClearScreen();
 				}
 
 				currentStateOfGame_ = app::enums::GameState::GAMEINPROCESS;
@@ -248,7 +248,7 @@ void Game::Start()
 
 		std::this_thread::sleep_for(
 				std::chrono::milliseconds(1000 / level_.GetCurrentSpeedOfGame()));
-		std::system("clear");
+		utils::RenderManager::ClearScreen();
 	}
 }
 

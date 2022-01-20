@@ -26,6 +26,8 @@ public:
 	static void PrintReturnToGame();
 	//!
 	static void PrintWaiting(int sec);
+	//!
+	static void ClearScreen();
 };
 
 }// namespace utils

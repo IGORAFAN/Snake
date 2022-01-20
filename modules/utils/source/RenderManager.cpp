@@ -64,4 +64,14 @@ void RenderManager::PrintWaiting(int sec)
 {
 	std::cout << "Get ready!!! " << sec << "sec" << std::endl;
 }
+
+void RenderManager::ClearScreen() {
+#if (defined(LINUX) || defined(__linux__))
+	std::system("clear");
+#elif (defined(_WIN32) || defined(_WIN64))
+	std::system("cls");
+#endif
+}
+
+
 }// namespace utils
