@@ -63,9 +63,9 @@ private:
 	//!
 	enums::GameState currentStateOfGame_;
 	//!
-	enums::KeyboardKeys currentPressedKey_;
-	//!
 	enums::Directions currentDirection_;
+	//!
+	mutable enums::KeyboardKeys currentPressedKey_;
 	//!
 	utils::KeyboardManager keyManager_;
 };

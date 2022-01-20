@@ -19,7 +19,6 @@ app::enums::KeyboardKeys KeyboardManager::GetPressedKey()
 {
 	int inputSignal = 0;
 #if (defined(LINUX) || defined(__linux__))
-	std::lock_guard<std::mutex> lock{mutex_};
 	struct termios oldt, newt;
 	tcgetattr(STDIN_FILENO, &oldt);
 	newt = oldt;
@@ -35,7 +34,6 @@ app::enums::KeyboardKeys KeyboardManager::GetPressedKey()
 
 app::enums::KeyboardKeys KeyboardManager::GetPressedKeyViaConsole()
 {
-	std::lock_guard<std::mutex> lock{mutex_};
 	const auto inputSignal = getchar();
 	return DefinedKeys(inputSignal);
 }
@@ -58,6 +56,8 @@ app::enums::KeyboardKeys KeyboardManager::DefinedKeys(int keyCode)
 			return app::enums::KeyboardKeys::N;
 		case (static_cast<int>('y')):
 			return app::enums::KeyboardKeys::Y;
+		case (static_cast<int>('r')):
+			return app::enums::KeyboardKeys::R;
 		default:
 			return app::enums::KeyboardKeys::NONE;
 	}

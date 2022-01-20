@@ -115,11 +115,10 @@ enums::CollisionWith Field::CheckCollision(enums::Objects obj)
 		case app::enums::Objects::SNAKE:
 			return app::enums::CollisionWith::SNAKE;
 		case app::enums::Objects::NONE:
-			break;
+			return enums::CollisionWith::NONE;
 		default:
-			break;
+			return enums::CollisionWith::NONE;
 	}
-	return enums::CollisionWith::NONE;
 }
 
 }// namespace app

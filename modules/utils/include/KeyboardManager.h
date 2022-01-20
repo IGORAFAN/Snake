@@ -24,14 +24,6 @@ public:
 	//
 private:
 	static app::enums::KeyboardKeys DefinedKeys(int keyCode);
-
-	//
-	//! Private fields
-	//
-private:
-	//!
-	std::mutex mutex_;
-
 };
 
 }// namespace utils

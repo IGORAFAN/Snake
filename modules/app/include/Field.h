@@ -20,7 +20,7 @@ public:
 	//! Constructor
 	Field();
 	//!
-	~Field() noexcept override;
+	~Field() noexcept;
 	//!
 	void ClearMatrix() override;
 	//!

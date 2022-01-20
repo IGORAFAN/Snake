@@ -13,7 +13,7 @@ namespace app
 Game::Game()
 	: isGameRunning_(false), reasonOfFail_("UNKNOWN"), field_(), food_(), snake_(), wall_(),
 	  score_(0), level_(), currentStateOfGame_(enums::GameState::STARTGAME),
-	  currentPressedKey_(enums::KeyboardKeys::W), currentDirection_(enums::Directions::UP),
+	  currentDirection_(enums::Directions::UP), currentPressedKey_(enums::KeyboardKeys::NONE),
 	  keyManager_()
 {}
 
@@ -47,7 +47,7 @@ void Game::GenerateNewGame()
 {
 	reasonOfFail_ = "UNKNOWN";
 	score_.Set(0);
-	level_.CalculateCurrentLevel(score_);
+	level_.SetCurrentLevelOfGame(1);
 
 	std::thread{[&]() {
 		field_.ClearMatrix();
@@ -112,8 +112,20 @@ void Game::Start()
 	isGameRunning_ = true;
 	std::cout << "The game is started" << std::endl;
 
+
+	std::thread{[&]() {
+		while (true)
+		{
+			if (!isGameRunning_) { break; }
+			currentPressedKey_ = keyManager_.GetPressedKey();
+			std::this_thread::sleep_for(std::chrono::milliseconds(constants::InputLatency));
+		}
+		return;
+	}}.detach();
+
 	while (isGameRunning_)
 	{
+		utils::RenderManager::ClearScreen();
 		switch (currentStateOfGame_)
 		{
 			case enums::GameState::STARTGAME:
@@ -145,13 +157,14 @@ void Game::Start()
 				utils::RenderManager::PrintLevel(level_);
 				mutexForField_.unlock();
 
-				std::thread{[&]() {
-					currentPressedKey_ = keyManager_.GetPressedKey();
-					currentDirection_ = GetDirectionFromPressedKey(currentPressedKey_);
-				}}.detach();
 				if (currentPressedKey_ == enums::KeyboardKeys::P)
 				{
 					currentStateOfGame_ = enums::GameState::PAUSEGAME;
+					break;
+				}
+				if (currentPressedKey_ == enums::KeyboardKeys::R)
+				{
+					currentStateOfGame_ = enums::GameState::STARTGAME;
 					break;
 				}
 				if (currentPressedKey_ == enums::KeyboardKeys::N)
@@ -159,10 +172,10 @@ void Game::Start()
 					Game::Stop();
 					break;
 				}
+
+				currentDirection_ = GetDirectionFromPressedKey(currentPressedKey_);
 				snake_.MakeMove(currentDirection_);
-				mutexForField_.lock();
 				const auto collisionResult = field_.CheckCollision(snake_);
-				mutexForField_.unlock();
 				if (collisionResult == enums::CollisionWith::WALL)
 				{
 					reasonOfFail_ = "Collision with the Wall...";
@@ -209,17 +222,12 @@ void Game::Start()
 				utils::RenderManager::PrintLevel(level_);
 				utils::RenderManager::PrintReturnToGame();
 
-				currentPressedKey_ = keyManager_.GetPressedKey();
 				if (currentPressedKey_ == enums::KeyboardKeys::Y)
 				{
 					currentStateOfGame_ = enums::GameState::GAMEINPROCESS;
 					break;
 				}
-				if (currentPressedKey_ == enums::KeyboardKeys::N)
-				{
-					Game::Stop();
-					break;
-				}
+				if (currentPressedKey_ == enums::KeyboardKeys::N) { Game::Stop(); }
 				break;
 			}
 			case enums::GameState::FINALGAME:
@@ -232,24 +240,17 @@ void Game::Start()
 				utils::RenderManager::PrintLevel(level_);
 				utils::RenderManager::PrintSuggestNewGame();
 
-				currentPressedKey_ = keyManager_.GetPressedKey();
 				if (currentPressedKey_ == enums::KeyboardKeys::Y)
 				{
 					currentStateOfGame_ = enums::GameState::STARTGAME;
-					break;
 				}
-				if (currentPressedKey_ == enums::KeyboardKeys::N)
-				{
-					Game::Stop();
-					break;
-				}
+				if (currentPressedKey_ == enums::KeyboardKeys::N) { Game::Stop(); }
 				break;
 			}
 		}
-
+		currentPressedKey_ = enums::KeyboardKeys::NONE;
 		std::this_thread::sleep_for(
 				std::chrono::milliseconds(1000 / level_.GetCurrentSpeedOfGame()));
-		utils::RenderManager::ClearScreen();
 	}
 }
 
@@ -257,6 +258,7 @@ void Game::Stop()
 {
 	isGameRunning_ = false;
 	std::cout << "The game is stopped" << std::endl;
+	exit(0);
 }
 
 }// namespace app

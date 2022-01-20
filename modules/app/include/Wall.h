@@ -21,7 +21,7 @@ public:
 	//! Constructor
 	Wall();
 	//!
-	~Wall() noexcept override;
+	~Wall() noexcept;
 	//!
 	void ClearMatrix() override;
 	//!

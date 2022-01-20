@@ -39,6 +39,7 @@ enum class KeyboardKeys
 	S,
 	W,
 	Y,
+	R,
 	NONE
 };
 

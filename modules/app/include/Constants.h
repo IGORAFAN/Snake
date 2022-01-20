@@ -8,6 +8,10 @@ namespace app
 
 namespace constants
 {
+
+static const size_t InputLatency = 10;//ms
+static const size_t MaxLevelOfGame = 5;
+static const size_t stepOfRiseUpOfDifficulty = 4;
 static const uint8_t WaitSecBeforeGameIsStart = 3;
 static const uint8_t MinGameSpeed = 4;
 static const uint8_t MaxGameSpeed = 20;

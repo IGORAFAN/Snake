@@ -21,7 +21,7 @@ public:
 	//! Constructor
 	Snake();
 	//!
-	~Snake() noexcept override;
+	~Snake() noexcept;
 	//!
 	void ClearMatrix() final override;
 	//!

@@ -16,11 +16,14 @@ public:
 	//
 	Level();
 	//!
+	bool SetCurrentLevelOfGame(size_t level);
+	//!
 	size_t GetCurrentSpeedOfGame() const;
 	//!
 	size_t GetCuurentLevelOfGame() const;
+
 	//!
-	void CalculateCurrentLevel(const app::Score& score);
+	void CalculateCurrentLevel(const app::Score &score);
 
 	//
 	//! Private methods
