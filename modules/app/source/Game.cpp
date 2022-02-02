@@ -160,6 +160,7 @@ void Game::Start()
 				if (currentPressedKey_ == enums::KeyboardKeys::P)
 				{
 					currentStateOfGame_ = enums::GameState::PAUSEGAME;
+					// bugs is here
 					break;
 				}
 				if (currentPressedKey_ == enums::KeyboardKeys::R)
